@@ -1,0 +1,31 @@
+# Core requirements for ORRRG Self-Organizing System
+asyncio-mqtt>=0.11.0
+pyyaml>=6.0
+aiofiles>=23.0.0
+networkx>=3.1
+numpy>=1.24.0
+pandas>=2.0.0
+requests>=2.31.0
+aiohttp>=3.8.0
+python-dotenv>=1.0.0
+
+# Optional ML/AI dependencies (install based on component usage)
+torch>=2.0.0
+tensorflow>=2.13.0
+transformers>=4.30.0
+scikit-learn>=1.3.0
+onnxruntime>=1.15.0
+
+# Database and storage
+sqlite3
+
+# Development and testing
+pytest>=7.4.0
+pytest-asyncio>=0.21.0
+black>=23.0.0
+flake8>=6.0.0
+mypy>=1.4.0
+
+# Documentation
+sphinx>=7.0.0
+sphinx-rtd-theme>=1.3.0
