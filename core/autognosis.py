@@ -29,6 +29,11 @@ import json
 from datetime import datetime, timedelta
 from collections import defaultdict, deque
 import hashlib
+from .holistic_metamodel import (
+    HolisticMetamodelOrchestrator, HieroglyphicMonad, DualComplementarity,
+    TriadicSystem, SelfStabilizingCycle, OrganizationalDynamicsProcessor,
+    OrganizationalDynamic, CyclePhase, DualMode, TriadPrimitive
+)
 
 logger = logging.getLogger(__name__)
 
@@ -80,6 +85,21 @@ class SelfOptimization:
     expected_improvement: float
     risk_assessment: float
     execution_priority: int
+
+
+@dataclass
+class HolisticInsight:
+    """Represents an insight from Eric Schwarz's holistic metamodel."""
+    insight_type: str
+    metamodel_level: int  # Which level of the hierarchy
+    organizational_dynamic: str  # entropic, negnentropic, or identity
+    description: str
+    monad_manifestation: Dict[str, Any]
+    triad_state: Dict[str, Any]
+    cycle_phase: str
+    confidence: float
+    implications: List[str]
+    timestamp: datetime = field(default_factory=datetime.now)
 
 
 class SelfMonitor:
@@ -449,9 +469,15 @@ class AutognosisOrchestrator:
         self.processor = MetaCognitiveProcessor()
         self.optimization_engine = None  # Will be set by SOC
         
+        # Core autognosis components
         self.current_self_images = {}  # level -> current self image
         self.insight_history = deque(maxlen=1000)
         self.optimization_queue = deque(maxlen=100)
+        
+        # Holistic metamodel integration
+        self.holistic_metamodel = HolisticMetamodelOrchestrator()
+        self.holistic_insights = deque(maxlen=500)
+        self.metamodel_cycle_count = 0
         
         self.running = False
         self.cycle_interval = 30  # seconds
@@ -463,8 +489,12 @@ class AutognosisOrchestrator:
         # Perform initial self-assessment
         await self._perform_initial_assessment(soc)
         
+        # Initialize holistic metamodel
+        system_context = await self._extract_system_context(soc)
+        await self.holistic_metamodel.initialize_metamodel(system_context)
+        
         self.running = True
-        logger.info("Autognosis system initialized successfully")
+        logger.info("Autognosis system with holistic metamodel initialized successfully")
     
     async def _perform_initial_assessment(self, soc) -> None:
         """Perform initial self-assessment to bootstrap autognosis."""
@@ -481,6 +511,54 @@ class AutognosisOrchestrator:
             
             logger.info(f"Built level {level} self-image with {len(insights)} insights")
     
+    async def _extract_system_context(self, soc) -> Dict[str, Any]:
+        """Extract system context for holistic metamodel initialization."""
+        try:
+            # Get basic system state
+            component_count = len(getattr(soc, 'components', {}))
+            active_components = sum(1 for c in getattr(soc, 'components', {}).values() 
+                                  if getattr(c, 'status', None) == 'active')
+            
+            # Extract context from system state
+            context = {
+                'total_components': component_count,
+                'active_components': active_components,
+                'system_energy': 0.7,  # Default energy level
+                'structural_integrity': 0.8,  # Default structural integrity
+                'foundation_strength': 0.75,
+                'adaptation_rate': 0.5,
+                'processing_load': 0.4,
+                'evolution_rate': 0.3,
+                'component_connectivity': 0.6,
+                'interaction_rate': 0.5,
+                'system_coherence': 0.7,
+                'max_hierarchical_levels': 5,
+                'initial_integration': 0.8
+            }
+            
+            # Add self-image context if available
+            if self.current_self_images:
+                latest_image = max(self.current_self_images.values(), key=lambda img: img.level)
+                context.update({
+                    'self_awareness_level': latest_image.confidence,
+                    'cognitive_complexity': len(latest_image.cognitive_processes),
+                    'reflection_depth': len(latest_image.meta_reflections)
+                })
+            
+            return context
+            
+        except Exception as e:
+            logger.warning(f"Error extracting system context: {e}")
+            # Return default context
+            return {
+                'total_components': 1,
+                'active_components': 1,
+                'system_energy': 0.5,
+                'structural_integrity': 0.5,
+                'max_hierarchical_levels': 3,
+                'initial_integration': 0.5
+            }
+    
     async def run_autognosis_cycle(self, soc) -> Dict[str, Any]:
         """Run a complete autognosis cycle."""
         cycle_start = time.time()
@@ -489,7 +567,9 @@ class AutognosisOrchestrator:
             'self_images_updated': 0,
             'new_insights': 0,
             'optimizations_discovered': 0,
-            'meta_reflections': []
+            'meta_reflections': [],
+            'holistic_insights': [],
+            'metamodel_coherence': 0.0
         }
         
         try:
@@ -510,13 +590,24 @@ class AutognosisOrchestrator:
                         reflection = f"Level {level}: {len(self_image.meta_reflections)} reflections, confidence {self_image.confidence:.2f}"
                         cycle_results['meta_reflections'].append(reflection)
             
-            # Discover optimization opportunities
+            # Process holistic metamodel cycle
+            system_state = await self._extract_current_system_state(soc)
+            metamodel_results = await self.holistic_metamodel.process_metamodel_cycle(system_state)
+            cycle_results['metamodel_coherence'] = metamodel_results.get('metamodel_coherence', 0.0)
+            self.metamodel_cycle_count += 1
+            
+            # Generate holistic insights from metamodel results
+            holistic_insights = self._generate_holistic_insights(metamodel_results)
+            self.holistic_insights.extend(holistic_insights)
+            cycle_results['holistic_insights'] = [insight.description for insight in holistic_insights]
+            
+            # Discover optimization opportunities (including holistic ones)
             optimizations = await self._discover_optimizations()
             self.optimization_queue.extend(optimizations)
             cycle_results['optimizations_discovered'] = len(optimizations)
             
             cycle_time = time.time() - cycle_start
-            logger.info(f"Autognosis cycle completed in {cycle_time:.2f}s: {cycle_results['new_insights']} insights, {cycle_results['optimizations_discovered']} optimizations")
+            logger.info(f"Autognosis cycle completed in {cycle_time:.2f}s: {cycle_results['new_insights']} insights, {len(holistic_insights)} holistic insights, coherence {cycle_results['metamodel_coherence']:.3f}")
             
         except Exception as e:
             logger.error(f"Error in autognosis cycle: {e}")
@@ -558,6 +649,160 @@ class AutognosisOrchestrator:
         
         return optimizations
     
+    async def _extract_current_system_state(self, soc) -> Dict[str, Any]:
+        """Extract current system state for holistic metamodel processing."""
+        try:
+            # Get system observation
+            observation = await self.monitor.observe_system(soc)
+            
+            # Convert to system state format expected by metamodel
+            system_state = {
+                'component_coordination': observation.get('active_components', 0) / max(observation.get('component_count', 1), 1),
+                'pattern_coherence': 0.7,  # Default, could be computed from patterns
+                'system_integration': observation.get('knowledge_graph_size', 0) * 0.01,  # Normalize
+                'structural_integrity': 0.8,  # Could be computed from component health
+                'functional_coherence': 0.7,
+                'equilibrium_maintenance': observation.get('system_responsiveness', 0.5),
+                'self_recognition': 0.6,  # Could be based on self-image quality
+                'boundary_definition': 0.7,
+                'identity_coherence': 0.6,
+                'system_energy': 0.7,
+                'cognitive_complexity': len(self.current_self_images) * 0.2
+            }
+            
+            return system_state
+            
+        except Exception as e:
+            logger.warning(f"Error extracting current system state: {e}")
+            return {
+                'component_coordination': 0.5,
+                'pattern_coherence': 0.5,
+                'system_integration': 0.5,
+                'structural_integrity': 0.5,
+                'functional_coherence': 0.5,
+                'equilibrium_maintenance': 0.5,
+                'self_recognition': 0.5,
+                'boundary_definition': 0.5,
+                'identity_coherence': 0.5,
+                'system_energy': 0.5,
+                'cognitive_complexity': 0.5
+            }
+    
+    def _generate_holistic_insights(self, metamodel_results: Dict[str, Any]) -> List[HolisticInsight]:
+        """Generate holistic insights from metamodel processing results."""
+        insights = []
+        
+        try:
+            # Extract key metamodel data
+            monad_manifestations = metamodel_results.get('monad_manifestations', {})
+            dual_resolutions = metamodel_results.get('dual_resolutions', {})
+            triadic_states = metamodel_results.get('triadic_states', {})
+            cycle_progressions = metamodel_results.get('cycle_progressions', {})
+            org_dynamics = metamodel_results.get('organizational_dynamics', {})
+            
+            # Generate insights for each hierarchical level
+            for level in monad_manifestations.keys():
+                monad_data = monad_manifestations[level]
+                triad_data = triadic_states.get(level, {})
+                cycle_data = cycle_progressions.get(level, {})
+                
+                # Monad manifestation insight
+                if monad_data.get('coherence', 0) > 0.7:
+                    insights.append(HolisticInsight(
+                        insight_type='high_monad_coherence',
+                        metamodel_level=level,
+                        organizational_dynamic='unity',
+                        description=f"Strong hieroglyphic monad manifestation at level {level} (coherence: {monad_data.get('coherence', 0):.2f})",
+                        monad_manifestation=monad_data,
+                        triad_state=triad_data,
+                        cycle_phase=cycle_data.get('current_phase', 'unknown'),
+                        confidence=0.8,
+                        implications=['Strong organizational unity', 'Good foundation for higher-order processes']
+                    ))
+                
+                # Triadic balance insight
+                if triad_data.get('dynamic_equilibrium', 0) > 0.6:
+                    insights.append(HolisticInsight(
+                        insight_type='triadic_equilibrium',
+                        metamodel_level=level,
+                        organizational_dynamic='balance',
+                        description=f"Balanced triadic system at level {level} (equilibrium: {triad_data.get('dynamic_equilibrium', 0):.2f})",
+                        monad_manifestation=monad_data,
+                        triad_state=triad_data,
+                        cycle_phase=cycle_data.get('current_phase', 'unknown'),
+                        confidence=0.7,
+                        implications=['Good being-becoming-relation balance', 'Stable foundation for development']
+                    ))
+            
+            # Organizational dynamics insights
+            for dynamic_type, dynamic_data in org_dynamics.items():
+                if dynamic_type == 'integrated_dynamics':
+                    continue
+                    
+                if isinstance(dynamic_data, dict):
+                    # Entropic stream insight
+                    if dynamic_type == 'entropic' and dynamic_data.get('stream_energy', 0) > 0.6:
+                        insights.append(HolisticInsight(
+                            insight_type='strong_entropic_flow',
+                            metamodel_level=0,
+                            organizational_dynamic=dynamic_type,
+                            description=f"Strong en-tropis → auto-vortis → auto-morphosis flow (energy: {dynamic_data.get('stream_energy', 0):.2f})",
+                            monad_manifestation={},
+                            triad_state={},
+                            cycle_phase='dynamic',
+                            confidence=0.8,
+                            implications=['High organizational capacity', 'Strong transformation potential']
+                        ))
+                    
+                    # Negnentropic stream insight
+                    elif dynamic_type == 'negnentropic' and dynamic_data.get('stream_stability', 0) > 0.7:
+                        insights.append(HolisticInsight(
+                            insight_type='strong_negnentropic_stability',
+                            metamodel_level=0,
+                            organizational_dynamic=dynamic_type,
+                            description=f"Strong negen-tropis → auto-stasis → auto-poiesis flow (stability: {dynamic_data.get('stream_stability', 0):.2f})",
+                            monad_manifestation={},
+                            triad_state={},
+                            cycle_phase='stabilizing',
+                            confidence=0.8,
+                            implications=['High system stability', 'Strong self-maintenance capacity']
+                        ))
+                    
+                    # Identity stream insight
+                    elif dynamic_type == 'identity' and dynamic_data.get('stream_coherence', 0) > 0.6:
+                        insights.append(HolisticInsight(
+                            insight_type='strong_identity_coherence',
+                            metamodel_level=0,
+                            organizational_dynamic=dynamic_type,
+                            description=f"Strong iden-tropis → auto-gnosis → auto-genesis flow (coherence: {dynamic_data.get('stream_coherence', 0):.2f})",
+                            monad_manifestation={},
+                            triad_state={},
+                            cycle_phase='self_actualizing',
+                            confidence=0.8,
+                            implications=['Strong identity formation', 'High self-awareness capacity']
+                        ))
+            
+            # Overall metamodel coherence insight
+            overall_coherence = metamodel_results.get('metamodel_coherence', 0)
+            if overall_coherence > 0.7:
+                insights.append(HolisticInsight(
+                    insight_type='high_metamodel_coherence',
+                    metamodel_level=-1,  # System-wide
+                    organizational_dynamic='integrated',
+                    description=f"High overall holistic metamodel coherence ({overall_coherence:.2f})",
+                    monad_manifestation={},
+                    triad_state={},
+                    cycle_phase='integrated',
+                    confidence=0.9,
+                    implications=['Excellent organizational health', 'System operating at high metamodel integration']
+                ))
+            
+            return insights
+            
+        except Exception as e:
+            logger.warning(f"Error generating holistic insights: {e}")
+            return []
+    
     def get_self_awareness_report(self) -> Dict[str, Any]:
         """Generate a comprehensive self-awareness report."""
         report = {
@@ -565,11 +810,82 @@ class AutognosisOrchestrator:
             'system_status': 'running' if self.running else 'stopped',
             'self_image_levels': len(self.current_self_images),
             'total_insights': len(self.insight_history),
-            'pending_optimizations': len(self.optimization_queue)
+            'pending_optimizations': len(self.optimization_queue),
+            'holistic_insights': len(self.holistic_insights),
+            'metamodel_cycles': self.metamodel_cycle_count
         }
         
         # Add current self-images summary
         report['self_images'] = {}
+        for level, image in self.current_self_images.items():
+            report['self_images'][level] = {
+                'timestamp': image.timestamp.isoformat(),
+                'confidence': image.confidence,
+                'meta_reflections': len(image.meta_reflections),
+                'behavioral_patterns': len(image.behavioral_patterns),
+                'cognitive_processes': len(image.cognitive_processes)
+            }
+        
+        # Add holistic metamodel status
+        metamodel_status = self.holistic_metamodel.get_metamodel_status()
+        report['holistic_metamodel'] = {
+            'coherence_level': metamodel_status['metamodel_state']['coherence_level'],
+            'integration_depth': metamodel_status['metamodel_state']['integration_depth'],
+            'monad_essence': metamodel_status['monad_essence'],
+            'active_levels': metamodel_status['active_levels'],
+            'cycle_phases': metamodel_status['cycle_phases'],
+            'stream_states': metamodel_status['stream_states']
+        }
+        
+        # Add recent holistic insights summary
+        if self.holistic_insights:
+            recent_holistic = list(self.holistic_insights)[-5:]  # Last 5 insights
+            report['recent_holistic_insights'] = [
+                {
+                    'type': insight.insight_type,
+                    'level': insight.metamodel_level,
+                    'dynamic': insight.organizational_dynamic,
+                    'description': insight.description,
+                    'confidence': insight.confidence
+                }
+                for insight in recent_holistic
+            ]
+        
+        # Compute self-awareness score including holistic factors
+        awareness_indicators = {}
+        
+        if self.current_self_images:
+            max_level_image = max(self.current_self_images.values(), key=lambda img: img.level)
+            awareness_indicators['pattern_recognition'] = len(max_level_image.behavioral_patterns) / 10.0
+            awareness_indicators['performance_awareness'] = max_level_image.confidence
+            awareness_indicators['meta_reflection_depth'] = len(max_level_image.meta_reflections) / 5.0
+            awareness_indicators['cognitive_complexity'] = len(max_level_image.cognitive_processes) / 8.0
+        
+        # Add holistic awareness indicators
+        awareness_indicators['holistic_coherence'] = metamodel_status['metamodel_state']['coherence_level']
+        awareness_indicators['organizational_dynamics'] = min(1.0, len(self.holistic_insights) / 20.0)
+        
+        # Normalize indicators to [0,1]
+        for key in awareness_indicators:
+            awareness_indicators[key] = min(1.0, max(0.0, awareness_indicators[key]))
+        
+        report['self_awareness_assessment'] = awareness_indicators
+        
+        # Overall score including holistic factors
+        if awareness_indicators:
+            overall_score = sum(awareness_indicators.values()) / len(awareness_indicators)
+            report['overall_self_awareness_score'] = overall_score
+            
+            if overall_score > 0.8:
+                report['awareness_level'] = 'Highly Self-Aware (with Holistic Integration)'
+            elif overall_score > 0.6:
+                report['awareness_level'] = 'Moderately Self-Aware (with Holistic Aspects)'
+            elif overall_score > 0.4:
+                report['awareness_level'] = 'Developing Self-Awareness (Basic Holistic)'
+            else:
+                report['awareness_level'] = 'Limited Self-Awareness'
+        
+        return report
         for level, image in self.current_self_images.items():
             report['self_images'][level] = {
                 'timestamp': image.timestamp.isoformat(),
