@@ -7,7 +7,12 @@ multiple research and development approaches from various component repositories
 """
 
 from .self_organizing_core import SelfOrganizingCore, ComponentInfo, ComponentInterface
-from .autognosis import AutognosisOrchestrator, SelfImage, MetaCognitiveInsight
+from .autognosis import AutognosisOrchestrator, SelfImage, MetaCognitiveInsight, HolisticInsight
+from .holistic_metamodel import (
+    HolisticMetamodelOrchestrator, HieroglyphicMonad, DualComplementarity,
+    TriadicSystem, SelfStabilizingCycle, OrganizationalDynamicsProcessor,
+    OrganizationalDynamic, CyclePhase, DualMode, TriadPrimitive
+)
 
 __version__ = "1.0.0"
 __author__ = "ReZonArc"
@@ -18,5 +23,16 @@ __all__ = [
     "ComponentInterface",
     "AutognosisOrchestrator",
     "SelfImage",
-    "MetaCognitiveInsight"
+    "MetaCognitiveInsight",
+    "HolisticInsight",
+    "HolisticMetamodelOrchestrator",
+    "HieroglyphicMonad",
+    "DualComplementarity",
+    "TriadicSystem", 
+    "SelfStabilizingCycle",
+    "OrganizationalDynamicsProcessor",
+    "OrganizationalDynamic",
+    "CyclePhase",
+    "DualMode",
+    "TriadPrimitive"
 ]
