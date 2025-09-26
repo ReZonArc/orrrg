@@ -11,7 +11,9 @@ from .autognosis import AutognosisOrchestrator, SelfImage, MetaCognitiveInsight,
 from .holistic_metamodel import (
     HolisticMetamodelOrchestrator, HieroglyphicMonad, DualComplementarity,
     TriadicSystem, SelfStabilizingCycle, OrganizationalDynamicsProcessor,
-    OrganizationalDynamic, CyclePhase, DualMode, TriadPrimitive
+    OrganizationalDynamic, CyclePhase, DualMode, TriadPrimitive,
+    TriadProductionProcess, TriadProductionStep, EnneadMetaSystem, EnneadAspect,
+    EvolutionaryHelix, EvolutionaryHelixStage
 )
 
 __version__ = "1.0.0"
@@ -34,5 +36,11 @@ __all__ = [
     "OrganizationalDynamic",
     "CyclePhase",
     "DualMode",
-    "TriadPrimitive"
+    "TriadPrimitive",
+    "TriadProductionProcess",
+    "TriadProductionStep",
+    "EnneadMetaSystem",
+    "EnneadAspect",
+    "EvolutionaryHelix",
+    "EvolutionaryHelixStage"
 ]

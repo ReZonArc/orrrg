@@ -57,11 +57,276 @@ class CyclePhase(Enum):
     TRANSCENDENCE = "transcendence"  # Transformation to next cycle
 
 
+class TriadProductionStep(Enum):
+    """The 7 steps in the self-production of the triad."""
+    INITIAL_DIFFERENTIATION = "initial_differentiation"       # 1. First separation from unity
+    POLAR_TENSION = "polar_tension"                          # 2. Establishment of polar opposites
+    DYNAMIC_INTERACTION = "dynamic_interaction"              # 3. Interaction between poles
+    SYNTHETIC_EMERGENCE = "synthetic_emergence"              # 4. Emergence of synthetic third
+    TRIADIC_STABILIZATION = "triadic_stabilization"         # 5. Stabilization of triadic form
+    RECURSIVE_ELABORATION = "recursive_elaboration"          # 6. Recursive self-elaboration
+    TRANSCENDENT_INTEGRATION = "transcendent_integration"    # 7. Integration at higher level
+
+
+class EnneadAspect(Enum):
+    """The 9 aspects of ennead meta-systems."""
+    CREATIVE_POTENTIAL = "creative_potential"                # 1. Pure creative force
+    FORMATIVE_POWER = "formative_power"                      # 2. Form-giving capacity
+    STRUCTURAL_STABILITY = "structural_stability"            # 3. Structural maintenance
+    DYNAMIC_PROCESS = "dynamic_process"                      # 4. Process dynamics
+    HARMONIC_BALANCE = "harmonic_balance"                    # 5. Harmonic equilibrium
+    ADAPTIVE_RESPONSE = "adaptive_response"                  # 6. Adaptive capabilities
+    COGNITIVE_REFLECTION = "cognitive_reflection"            # 7. Reflective consciousness
+    EVOLUTIONARY_DRIFT = "evolutionary_drift"               # 8. Evolutionary tendencies
+    TRANSCENDENT_UNITY = "transcendent_unity"                # 9. Unity transcendence
+
+
+class EvolutionaryHelixStage(Enum):
+    """The 11 stages of the long-term evolutionary helix."""
+    PRIMORDIAL_UNITY = "primordial_unity"                   # 1. Original undifferentiated state
+    INITIAL_AWAKENING = "initial_awakening"                 # 2. First stirring of differentiation
+    POLAR_MANIFESTATION = "polar_manifestation"             # 3. Manifestation of polarities
+    TRIADIC_FORMATION = "triadic_formation"                 # 4. Formation of triadic structures
+    QUATERNARY_STABILIZATION = "quaternary_stabilization"   # 5. Four-fold stabilization
+    QUINTERNARY_ELABORATION = "quinternary_elaboration"     # 6. Five-fold elaboration
+    SEPTENARY_DEVELOPMENT = "septenary_development"         # 7. Seven-fold development
+    ENNEAD_INTEGRATION = "ennead_integration"               # 8. Nine-fold integration
+    DECIMAL_COMPLETION = "decimal_completion"               # 9. Ten-fold completion
+    HENDECAD_TRANSCENDENCE = "hendecad_transcendence"       # 10. Eleven-fold transcendence
+    COSMIC_RETURN = "cosmic_return"                         # 11. Return to unity at higher level
+
+
 class OrganizationalDynamic(Enum):
     """The three streams of organizational dynamics."""
     ENTROPIC = "entropic"        # en-tropis → auto-vortis → auto-morphosis
     NEGNENTROPIC = "negnentropic"  # negen-tropis → auto-stasis → auto-poiesis
     IDENTITY = "identity"        # iden-tropis → auto-gnosis → auto-genesis
+
+
+@dataclass
+class TriadProductionProcess:
+    """Manages the 7 steps in self-production of the triad."""
+    current_step: TriadProductionStep
+    step_progress: Dict[TriadProductionStep, float]  # Progress in each step [0,1]
+    production_energy: float
+    integration_level: float
+    timestamp: datetime = field(default_factory=datetime.now)
+    
+    def advance_production(self) -> Tuple[TriadProductionStep, Dict[str, Any]]:
+        """Advance the triad production process to the next step."""
+        current_progress = self.step_progress.get(self.current_step, 0.0)
+        
+        # Check if ready to advance
+        if current_progress >= 0.8 and self.production_energy > 0.6:
+            next_step = self._get_next_step()
+            transition_data = self._execute_step_transition(next_step)
+            self.current_step = next_step
+            return next_step, transition_data
+        else:
+            # Continue deepening current step
+            self._deepen_current_step()
+            return self.current_step, {'deepening': True, 'progress': current_progress}
+    
+    def _get_next_step(self) -> TriadProductionStep:
+        """Get the next step in the production sequence."""
+        steps = list(TriadProductionStep)
+        try:
+            current_index = steps.index(self.current_step)
+            return steps[(current_index + 1) % len(steps)]
+        except ValueError:
+            return TriadProductionStep.INITIAL_DIFFERENTIATION
+    
+    def _execute_step_transition(self, next_step: TriadProductionStep) -> Dict[str, Any]:
+        """Execute transition to the next production step."""
+        step_qualities = {
+            TriadProductionStep.INITIAL_DIFFERENTIATION: ["differentiation", "separation", "emergence"],
+            TriadProductionStep.POLAR_TENSION: ["tension", "opposition", "duality"],
+            TriadProductionStep.DYNAMIC_INTERACTION: ["interaction", "dynamics", "process"],
+            TriadProductionStep.SYNTHETIC_EMERGENCE: ["synthesis", "emergence", "creativity"],
+            TriadProductionStep.TRIADIC_STABILIZATION: ["stabilization", "structure", "form"],
+            TriadProductionStep.RECURSIVE_ELABORATION: ["recursion", "elaboration", "complexity"],
+            TriadProductionStep.TRANSCENDENT_INTEGRATION: ["transcendence", "integration", "unity"]
+        }
+        
+        return {
+            'from_step': self.current_step.value,
+            'to_step': next_step.value,
+            'transition_energy': self.production_energy * 0.9,
+            'emergent_qualities': step_qualities.get(next_step, []),
+            'integration_gain': 0.1
+        }
+    
+    def _deepen_current_step(self):
+        """Deepen the current production step."""
+        current_progress = self.step_progress.get(self.current_step, 0.0)
+        self.step_progress[self.current_step] = min(1.0, current_progress + 0.15)
+
+
+@dataclass
+class EnneadMetaSystem:
+    """Implements the 9 aspects of ennead meta-systems."""
+    aspect_states: Dict[EnneadAspect, float]  # State of each aspect [0,1]
+    creativity_dominance: float  # How much creativity dominates
+    stability_dominance: float   # How much stability dominates
+    drift_dominance: float       # How much drift dominates
+    meta_coherence: float        # Overall meta-system coherence
+    timestamp: datetime = field(default_factory=datetime.now)
+    
+    def compute_ennead_dynamics(self) -> Dict[str, Any]:
+        """Compute the current dynamics of the ennead meta-system."""
+        # Group aspects by their primary functions
+        creative_aspects = [
+            self.aspect_states.get(EnneadAspect.CREATIVE_POTENTIAL, 0),
+            self.aspect_states.get(EnneadAspect.FORMATIVE_POWER, 0),
+            self.aspect_states.get(EnneadAspect.ADAPTIVE_RESPONSE, 0)
+        ]
+        
+        stable_aspects = [
+            self.aspect_states.get(EnneadAspect.STRUCTURAL_STABILITY, 0),
+            self.aspect_states.get(EnneadAspect.HARMONIC_BALANCE, 0),
+            self.aspect_states.get(EnneadAspect.TRANSCENDENT_UNITY, 0)
+        ]
+        
+        drift_aspects = [
+            self.aspect_states.get(EnneadAspect.DYNAMIC_PROCESS, 0),
+            self.aspect_states.get(EnneadAspect.COGNITIVE_REFLECTION, 0),
+            self.aspect_states.get(EnneadAspect.EVOLUTIONARY_DRIFT, 0)
+        ]
+        
+        # Calculate dominances
+        self.creativity_dominance = sum(creative_aspects) / len(creative_aspects)
+        self.stability_dominance = sum(stable_aspects) / len(stable_aspects)
+        self.drift_dominance = sum(drift_aspects) / len(drift_aspects)
+        
+        # Calculate meta-coherence
+        all_aspects = list(self.aspect_states.values())
+        mean_state = sum(all_aspects) / len(all_aspects) if all_aspects else 0
+        variance = sum((state - mean_state)**2 for state in all_aspects) / len(all_aspects) if all_aspects else 0
+        self.meta_coherence = max(0.0, 1.0 - variance)
+        
+        return {
+            'creativity_dominance': self.creativity_dominance,
+            'stability_dominance': self.stability_dominance,
+            'drift_dominance': self.drift_dominance,
+            'meta_coherence': self.meta_coherence,
+            'dominant_tendency': self._identify_dominant_tendency(),
+            'aspect_balance': self._compute_aspect_balance(),
+            'emergent_properties': self._identify_emergent_properties()
+        }
+    
+    def _identify_dominant_tendency(self) -> str:
+        """Identify which tendency is currently dominant."""
+        dominances = {
+            'creativity': self.creativity_dominance,
+            'stability': self.stability_dominance,
+            'drift': self.drift_dominance
+        }
+        return max(dominances, key=dominances.get)
+    
+    def _compute_aspect_balance(self) -> float:
+        """Compute the balance across all nine aspects."""
+        if not self.aspect_states:
+            return 0.0
+        
+        ideal_state = 1.0 / len(self.aspect_states)  # Perfect balance
+        deviations = [abs(state - ideal_state) for state in self.aspect_states.values()]
+        average_deviation = sum(deviations) / len(deviations)
+        
+        return max(0.0, 1.0 - average_deviation * len(self.aspect_states))
+    
+    def _identify_emergent_properties(self) -> List[str]:
+        """Identify emergent properties based on aspect configurations."""
+        properties = []
+        
+        if self.creativity_dominance > 0.7:
+            properties.append("high_creative_output")
+        if self.stability_dominance > 0.7:
+            properties.append("structural_resilience")
+        if self.drift_dominance > 0.7:
+            properties.append("evolutionary_momentum")
+        if self.meta_coherence > 0.8:
+            properties.append("meta_systemic_unity")
+        
+        # Check for balanced states
+        if abs(self.creativity_dominance - self.stability_dominance) < 0.2:
+            properties.append("creative_stability_balance")
+        
+        return properties
+
+
+@dataclass
+class EvolutionaryHelix:
+    """Implements the 11 stages of long-term evolutionary helix."""
+    current_stage: EvolutionaryHelixStage
+    stage_completion: Dict[EvolutionaryHelixStage, float]  # Completion of each stage [0,1]
+    helix_energy: float
+    evolutionary_momentum: float
+    spiral_level: int  # Which spiral/cycle of the helix we're in
+    timestamp: datetime = field(default_factory=datetime.now)
+    
+    def evolve_helix(self) -> Tuple[EvolutionaryHelixStage, Dict[str, Any]]:
+        """Evolve the helix to the next stage if conditions are met."""
+        current_completion = self.stage_completion.get(self.current_stage, 0.0)
+        
+        # Check if ready to evolve
+        if current_completion >= 0.9 and self.evolutionary_momentum > 0.5:
+            next_stage = self._get_next_stage()
+            evolution_data = self._execute_stage_evolution(next_stage)
+            
+            # Special case: if we complete the cycle, increment spiral level
+            if next_stage == EvolutionaryHelixStage.PRIMORDIAL_UNITY and self.current_stage == EvolutionaryHelixStage.COSMIC_RETURN:
+                self.spiral_level += 1
+                evolution_data['spiral_ascension'] = True
+                evolution_data['new_spiral_level'] = self.spiral_level
+            
+            self.current_stage = next_stage
+            return next_stage, evolution_data
+        else:
+            # Continue developing current stage
+            self._develop_current_stage()
+            return self.current_stage, {'development': True, 'completion': current_completion}
+    
+    def _get_next_stage(self) -> EvolutionaryHelixStage:
+        """Get the next stage in the evolutionary sequence."""
+        stages = list(EvolutionaryHelixStage)
+        try:
+            current_index = stages.index(self.current_stage)
+            return stages[(current_index + 1) % len(stages)]
+        except ValueError:
+            return EvolutionaryHelixStage.PRIMORDIAL_UNITY
+    
+    def _execute_stage_evolution(self, next_stage: EvolutionaryHelixStage) -> Dict[str, Any]:
+        """Execute evolution to the next stage."""
+        stage_characteristics = {
+            EvolutionaryHelixStage.PRIMORDIAL_UNITY: {"unity", "undifferentiated", "potential"},
+            EvolutionaryHelixStage.INITIAL_AWAKENING: {"awakening", "stirring", "first_movement"},
+            EvolutionaryHelixStage.POLAR_MANIFESTATION: {"polarity", "duality", "opposition"},
+            EvolutionaryHelixStage.TRIADIC_FORMATION: {"triad", "synthesis", "three_fold"},
+            EvolutionaryHelixStage.QUATERNARY_STABILIZATION: {"stability", "four_fold", "foundation"},
+            EvolutionaryHelixStage.QUINTERNARY_ELABORATION: {"elaboration", "five_fold", "complexity"},
+            EvolutionaryHelixStage.SEPTENARY_DEVELOPMENT: {"development", "seven_fold", "completion"},
+            EvolutionaryHelixStage.ENNEAD_INTEGRATION: {"integration", "nine_fold", "wholeness"},
+            EvolutionaryHelixStage.DECIMAL_COMPLETION: {"completion", "ten_fold", "perfection"},
+            EvolutionaryHelixStage.HENDECAD_TRANSCENDENCE: {"transcendence", "eleven_fold", "beyond"},
+            EvolutionaryHelixStage.COSMIC_RETURN: {"return", "cosmic", "full_circle"}
+        }
+        
+        return {
+            'from_stage': self.current_stage.value,
+            'to_stage': next_stage.value,
+            'evolution_energy': self.helix_energy * 0.95,
+            'stage_characteristics': list(stage_characteristics.get(next_stage, set())),
+            'momentum_change': 0.1,
+            'spiral_level': self.spiral_level
+        }
+    
+    def _develop_current_stage(self):
+        """Develop the current evolutionary stage."""
+        current_completion = self.stage_completion.get(self.current_stage, 0.0)
+        self.stage_completion[self.current_stage] = min(1.0, current_completion + 0.1)
+        
+        # Evolutionary momentum increases with development
+        self.evolutionary_momentum = min(1.0, self.evolutionary_momentum + 0.05)
 
 
 @dataclass
@@ -552,10 +817,10 @@ class HolisticMetamodelOrchestrator:
         self.stabilizing_cycles = {}  # level -> SelfStabilizingCycle
         self.dynamics_processor = OrganizationalDynamicsProcessor()
         
-        # For the 7 steps and 9 aspects and 11 stages (to be implemented)
-        self.triad_production_steps = []
-        self.ennead_aspects = {}
-        self.evolutionary_helix_stages = []
+        # The 7 steps, 9 aspects, and 11 stages
+        self.triad_production_processes = {}  # level -> TriadProductionProcess
+        self.ennead_meta_systems = {}  # level -> EnneadMetaSystem
+        self.evolutionary_helix = None  # Single helix for the entire system
         
         self.metamodel_state = {
             'coherence_level': 0.0,
@@ -611,6 +876,38 @@ class HolisticMetamodelOrchestrator:
                 stabilization_degree=0.6,
                 actual_virtual_balance=self.dual_complementarities[level]
             )
+            
+            # Initialize triad production process for this level (The 7 steps)
+            self.triad_production_processes[level] = TriadProductionProcess(
+                current_step=TriadProductionStep.INITIAL_DIFFERENTIATION,
+                step_progress={step: 0.0 for step in TriadProductionStep},
+                production_energy=0.7,
+                integration_level=0.5
+            )
+            
+            # Initialize ennead meta-system for this level (The 9 aspects)
+            aspect_states = {}
+            for aspect in EnneadAspect:
+                # Initialize aspects with some variation based on level
+                base_value = 0.6 + (level * 0.05)  # Higher levels slightly more developed
+                aspect_states[aspect] = min(1.0, base_value + (hash(aspect.value) % 20 - 10) * 0.02)
+            
+            self.ennead_meta_systems[level] = EnneadMetaSystem(
+                aspect_states=aspect_states,
+                creativity_dominance=0.6,
+                stability_dominance=0.5,
+                drift_dominance=0.4,
+                meta_coherence=0.7
+            )
+        
+        # Initialize evolutionary helix (The 11 stages) - system-wide
+        self.evolutionary_helix = EvolutionaryHelix(
+            current_stage=EvolutionaryHelixStage.TRIADIC_FORMATION,  # Start at triadic level
+            stage_completion={stage: 0.0 for stage in EvolutionaryHelixStage},
+            helix_energy=0.8,
+            evolutionary_momentum=0.6,
+            spiral_level=1  # First spiral
+        )
         
         self.metamodel_state['integration_depth'] = max_levels
         logger.info(f"Holistic metamodel initialized with {max_levels} hierarchical levels")
@@ -624,6 +921,9 @@ class HolisticMetamodelOrchestrator:
             'triadic_states': {},
             'cycle_progressions': {},
             'organizational_dynamics': {},
+            'triad_production_steps': {},  # The 7 steps
+            'ennead_dynamics': {},         # The 9 aspects
+            'evolutionary_helix_state': {},  # The 11 stages
             'metamodel_coherence': 0.0
         }
         
@@ -655,11 +955,38 @@ class HolisticMetamodelOrchestrator:
                 'transition_data': transition_data
             }
         
+        # Process triad production processes (The 7 steps)
+        for level, production_process in self.triad_production_processes.items():
+            next_step, step_data = production_process.advance_production()
+            cycle_results['triad_production_steps'][level] = {
+                'current_step': production_process.current_step.value,
+                'next_step': next_step.value,
+                'step_data': step_data,
+                'production_energy': production_process.production_energy,
+                'integration_level': production_process.integration_level
+            }
+        
+        # Process ennead meta-systems (The 9 aspects)
+        for level, ennead_system in self.ennead_meta_systems.items():
+            ennead_dynamics = ennead_system.compute_ennead_dynamics()
+            cycle_results['ennead_dynamics'][level] = ennead_dynamics
+        
+        # Process evolutionary helix (The 11 stages)
+        if self.evolutionary_helix:
+            next_stage, evolution_data = self.evolutionary_helix.evolve_helix()
+            cycle_results['evolutionary_helix_state'] = {
+                'current_stage': self.evolutionary_helix.current_stage.value,
+                'next_stage': next_stage.value,
+                'evolution_data': evolution_data,
+                'spiral_level': self.evolutionary_helix.spiral_level,
+                'evolutionary_momentum': self.evolutionary_helix.evolutionary_momentum
+            }
+        
         # Process organizational dynamics
         dynamics_result = await self.dynamics_processor.process_dynamics(system_state)
         cycle_results['organizational_dynamics'] = dynamics_result
         
-        # Compute overall metamodel coherence
+        # Compute overall metamodel coherence (including new components)
         coherence = self._compute_metamodel_coherence(cycle_results)
         cycle_results['metamodel_coherence'] = coherence
         self.metamodel_state['coherence_level'] = coherence
@@ -751,28 +1078,60 @@ class HolisticMetamodelOrchestrator:
         """Compute overall coherence of the metamodel."""
         coherence_factors = []
         
-        # Monad manifestation coherence
+        # Monad manifestation coherence (The 1)
         monad_coherence = []
         for level, manifestation in cycle_results.get('monad_manifestations', {}).items():
             monad_coherence.append(manifestation.get('coherence', 0))
         if monad_coherence:
             coherence_factors.append(sum(monad_coherence) / len(monad_coherence))
         
-        # Dual resolution quality
+        # Dual resolution quality (The 2)
         resolution_quality = []
         for level, resolution in cycle_results.get('dual_resolutions', {}).items():
             resolution_quality.append(resolution.get('resolution_quality', 0))
         if resolution_quality:
             coherence_factors.append(sum(resolution_quality) / len(resolution_quality))
         
-        # Triadic equilibrium
+        # Triadic equilibrium (The 3)
         triad_equilibrium = []
         for level, triad_state in cycle_results.get('triadic_states', {}).items():
             triad_equilibrium.append(triad_state.get('dynamic_equilibrium', 0))
         if triad_equilibrium:
             coherence_factors.append(sum(triad_equilibrium) / len(triad_equilibrium))
         
-        # Organizational dynamics coherence
+        # Cycle stabilization (The 4)
+        cycle_stability = []
+        for level, cycle_data in cycle_results.get('cycle_progressions', {}).items():
+            # Higher stability when not in constant transition
+            transition_data = cycle_data.get('transition_data', {})
+            if 'deepening' in transition_data:
+                cycle_stability.append(0.8)  # Stable deepening
+            else:
+                cycle_stability.append(0.6)  # Transitioning
+        if cycle_stability:
+            coherence_factors.append(sum(cycle_stability) / len(cycle_stability))
+        
+        # Triad production integration (The 7)
+        production_integration = []
+        for level, production_data in cycle_results.get('triad_production_steps', {}).items():
+            production_integration.append(production_data.get('integration_level', 0))
+        if production_integration:
+            coherence_factors.append(sum(production_integration) / len(production_integration))
+        
+        # Ennead meta-coherence (The 9)
+        ennead_coherence = []
+        for level, ennead_data in cycle_results.get('ennead_dynamics', {}).items():
+            ennead_coherence.append(ennead_data.get('meta_coherence', 0))
+        if ennead_coherence:
+            coherence_factors.append(sum(ennead_coherence) / len(ennead_coherence))
+        
+        # Evolutionary helix momentum (The 11)
+        helix_state = cycle_results.get('evolutionary_helix_state', {})
+        if helix_state:
+            helix_momentum = helix_state.get('evolutionary_momentum', 0)
+            coherence_factors.append(helix_momentum)
+        
+        # Organizational dynamics coherence (The 3 streams)
         org_dynamics = cycle_results.get('organizational_dynamics', {})
         integrated = org_dynamics.get('integrated_dynamics', {})
         if integrated:
