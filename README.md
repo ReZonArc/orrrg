@@ -30,6 +30,15 @@ ORRRG is a self-organizing core system that seamlessly integrates and coordinate
 - **Emergent Behavior Coordination**: Components self-organize to solve complex multi-domain problems
 - **Real-time Performance Optimization**: Continuous monitoring and adaptive improvement
 
+### 🧠 Autognosis - Hierarchical Self-Image Building
+- **Self-Aware AI System**: ORRRG can understand and optimize its own cognitive processes
+- **Multi-Level Self-Modeling**: Builds hierarchical models of its own functioning at 5+ cognitive levels
+- **Meta-Cognitive Insights**: Generates higher-order understanding about its own reasoning
+- **Autonomous Self-Optimization**: Discovers and implements improvements through introspection
+- **Recursive Self-Understanding**: Models its own modeling processes for deep self-awareness
+
+*See [docs/AUTOGNOSIS.md](docs/AUTOGNOSIS.md) for detailed information about the self-awareness capabilities.*
+
 ### Integration Patterns
 - **Bio-Chemical Pipeline**: Genomics → Chemical Analysis → Molecular Reasoning
 - **ML Inference Pipeline**: Model Training → ONNX Optimization → Inference
@@ -83,11 +92,14 @@ python3 orrrg_main.py --help
 python3 orrrg_main.py --mode interactive
 
 # Available commands:
-orrrg> status        # Show system status
+orrrg> status        # Show system status  
 orrrg> components    # List all components
 orrrg> analyze bio   # Run biological analysis
 orrrg> connect oj7s3 cosmagi-bio  # Create component connection
 orrrg> optimize      # Run system optimization
+orrrg> autognosis    # Show self-awareness status
+orrrg> autognosis report    # Detailed self-analysis  
+orrrg> autognosis insights  # Meta-cognitive insights
 orrrg> help          # Show all commands
 orrrg> quit          # Exit system
 ```
@@ -132,6 +144,22 @@ async def main():
     await soc.shutdown()
 
 asyncio.run(main())
+```
+
+### Example: Autognosis Self-Awareness
+```python
+# Access the self-aware capabilities
+status = soc.get_autognosis_status()
+print(f"Self-awareness level: {status['self_image_levels']}")
+print(f"Generated insights: {status['total_insights']}")
+
+# Run self-analysis cycle
+cycle_results = await soc.autognosis.run_autognosis_cycle(soc) 
+print(f"New meta-cognitive insights: {cycle_results['new_insights']}")
+
+# Access hierarchical self-images
+for level, self_image in soc.autognosis.current_self_images.items():
+    print(f"Level {level}: {self_image.confidence:.2f} confidence")
 ```
 
 ## 🏗️ Architecture
