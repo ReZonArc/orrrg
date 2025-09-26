@@ -28,6 +28,7 @@ import asyncio
 import logging
 import os
 import sys
+import time
 from typing import Dict, List, Any, Optional, Callable
 from dataclasses import dataclass, field
 from abc import ABC, abstractmethod
@@ -36,6 +37,8 @@ import json
 import yaml
 import importlib.util
 from concurrent.futures import ThreadPoolExecutor, ProcessPoolExecutor
+
+from .autognosis import AutognosisOrchestrator
 
 
 # Configure logging
@@ -99,6 +102,10 @@ class SelfOrganizingCore:
         self.thread_pool = ThreadPoolExecutor(max_workers=4)
         self.process_pool = ProcessPoolExecutor(max_workers=2)
         self.running = False
+        self.start_time = time.time()
+        
+        # Initialize autognosis system
+        self.autognosis = AutognosisOrchestrator()
         
         # Initialize component definitions
         self.component_definitions = {
@@ -162,8 +169,14 @@ class SelfOrganizingCore:
         # Initialize knowledge graph
         await self.initialize_knowledge_graph()
         
+        # Initialize autognosis system
+        await self.autognosis.initialize(self)
+        
         # Start event processing
         asyncio.create_task(self.process_events())
+        
+        # Start autognosis cycles
+        asyncio.create_task(self._run_autognosis_cycles())
         
         self.running = True
         logger.info("Self-Organizing Core initialized successfully")
@@ -288,6 +301,10 @@ class SelfOrganizingCore:
             await self.handle_cross_component_query(event)
         elif event_type == "adaptive_optimization":
             await self.handle_adaptive_optimization(event)
+        elif event_type == "autognosis_insight":
+            await self.handle_autognosis_insight(event)
+        elif event_type == "autognosis_optimization":
+            await self.handle_autognosis_optimization(event)
         else:
             logger.warning(f"Unknown event type: {event_type}")
     
@@ -350,9 +367,79 @@ class SelfOrganizingCore:
         # Coordinate research analysis with publication workflow
         logger.info("Routing research publication request")
     
+    async def _run_autognosis_cycles(self) -> None:
+        """Run periodic autognosis cycles for self-awareness and optimization."""
+        logger.info("Starting autognosis cycle task")
+        
+        while self.running:
+            try:
+                cycle_results = await self.autognosis.run_autognosis_cycle(self)
+                
+                # Queue autognosis insights as events
+                if cycle_results.get('new_insights', 0) > 0:
+                    await self.event_bus.put({
+                        "type": "autognosis_insight",
+                        "cycle_results": cycle_results,
+                        "timestamp": cycle_results['timestamp'].isoformat()
+                    })
+                
+                # Execute any high-priority optimizations
+                for optimization in list(self.autognosis.optimization_queue):
+                    if optimization.execution_priority >= 8:  # High priority threshold
+                        success = await self.autognosis.execute_optimization(optimization, self)
+                        if success:
+                            self.autognosis.optimization_queue.remove(optimization)
+                            await self.event_bus.put({
+                                "type": "autognosis_optimization",
+                                "optimization_type": optimization.optimization_type,
+                                "target_component": optimization.target_component,
+                                "success": True
+                            })
+                
+            except Exception as e:
+                logger.error(f"Error in autognosis cycle: {e}")
+            
+            # Wait for next cycle
+            await asyncio.sleep(self.autognosis.cycle_interval)
+    
+    async def handle_autognosis_insight(self, event: Dict[str, Any]) -> None:
+        """Handle autognosis insights and integrate them into system knowledge."""
+        cycle_results = event.get('cycle_results', {})
+        insights_count = cycle_results.get('new_insights', 0)
+        
+        logger.info(f"Processing autognosis insights: {insights_count} new insights discovered")
+        
+        # Update knowledge graph with self-awareness data
+        self.knowledge_graph['autognosis'] = {
+            'type': 'meta_system',
+            'capabilities': ['self_awareness', 'meta_cognition', 'self_optimization'],
+            'status': 'active',
+            'connections': [],
+            'insights_generated': insights_count,
+            'last_update': event.get('timestamp')
+        }
+    
+    async def handle_autognosis_optimization(self, event: Dict[str, Any]) -> None:
+        """Handle executed autognosis optimizations."""
+        optimization_type = event.get('optimization_type')
+        target_component = event.get('target_component')
+        success = event.get('success', False)
+        
+        if success:
+            logger.info(f"Autognosis optimization successful: {optimization_type} on {target_component}")
+        else:
+            logger.warning(f"Autognosis optimization failed: {optimization_type} on {target_component}")
+    
+    def get_autognosis_status(self) -> Dict[str, Any]:
+        """Get autognosis system status."""
+        if not hasattr(self, 'autognosis'):
+            return {'status': 'not_initialized'}
+        
+        return self.autognosis.get_self_awareness_report()
+    
     def get_system_status(self) -> Dict[str, Any]:
         """Get overall system status."""
-        return {
+        status = {
             "running": self.running,
             "components": {
                 name: {
@@ -364,11 +451,21 @@ class SelfOrganizingCore:
             "knowledge_graph_size": len(self.knowledge_graph),
             "active_components": len(self.active_components)
         }
+        
+        # Add autognosis status if available
+        if hasattr(self, 'autognosis') and self.autognosis:
+            status["autognosis"] = self.get_autognosis_status()
+        
+        return status
     
     async def shutdown(self) -> None:
         """Shutdown the Self-Organizing Core."""
         logger.info("Shutting down Self-Organizing Core...")
         self.running = False
+        
+        # Shutdown autognosis system
+        if hasattr(self, 'autognosis') and self.autognosis:
+            await self.autognosis.shutdown()
         
         # Cleanup active components
         for component in self.active_components.values():

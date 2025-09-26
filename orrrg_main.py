@@ -107,6 +107,10 @@ async def interactive_mode(soc: SelfOrganizingCore) -> None:
                 await handle_connection_command(soc, command)
             elif command == 'optimize':
                 await handle_optimization_command(soc)
+            elif command == 'autognosis':
+                await handle_autognosis_command(soc)
+            elif command.startswith('autognosis '):
+                await handle_autognosis_command(soc, command)
             else:
                 print(f"Unknown command: {command}. Type 'help' for available commands.")
                 
@@ -125,6 +129,8 @@ Available Commands:
   analyze TYPE  - Perform analysis (bio, chemical, ml, research)
   connect A B   - Create connection between components A and B
   optimize      - Run system optimization
+  autognosis    - Show autognosis (self-awareness) status
+  autognosis STATUS/REPORT/INSIGHTS - Get detailed autognosis information
   help          - Show this help message
   quit          - Exit the system
 """
@@ -199,6 +205,147 @@ async def handle_optimization_command(soc: SelfOrganizingCore) -> None:
     
     await soc.event_bus.put(event)
     print("Queued system optimization request")
+
+
+async def handle_autognosis_command(soc: SelfOrganizingCore, command: str = "autognosis") -> None:
+    """Handle autognosis commands."""
+    parts = command.split()
+    
+    if len(parts) == 1:
+        # Basic autognosis status
+        await show_autognosis_status(soc)
+    elif len(parts) == 2:
+        subcommand = parts[1].lower()
+        if subcommand == "status":
+            await show_autognosis_status(soc)
+        elif subcommand == "report":
+            await show_autognosis_report(soc)
+        elif subcommand == "insights":
+            await show_autognosis_insights(soc)
+        else:
+            print(f"Unknown autognosis subcommand: {subcommand}")
+            print("Available: status, report, insights")
+    else:
+        print("Usage: autognosis [status|report|insights]")
+
+
+async def show_autognosis_status(soc: SelfOrganizingCore) -> None:
+    """Show basic autognosis status."""
+    if not hasattr(soc, 'autognosis') or not soc.autognosis:
+        print("Autognosis system not initialized")
+        return
+    
+    status = soc.get_autognosis_status()
+    
+    print(f"\n🧠 Autognosis - Hierarchical Self-Image Building System")
+    print("=" * 55)
+    print(f"Status: {status.get('system_status', 'unknown')}")
+    print(f"Self-Image Levels: {status.get('self_image_levels', 0)}")
+    print(f"Total Insights Generated: {status.get('total_insights', 0)}")
+    print(f"Pending Optimizations: {status.get('pending_optimizations', 0)}")
+    
+    # Show recent insights
+    recent_insights = status.get('recent_insights', [])
+    if recent_insights:
+        print(f"\nRecent Insights ({len(recent_insights)}):")
+        for insight in recent_insights[-3:]:  # Show last 3
+            print(f"  • {insight['type']}: {insight['description'][:60]}...")
+    
+    # Show top optimizations
+    top_opts = status.get('top_optimizations', [])
+    if top_opts:
+        print(f"\nTop Optimization Opportunities:")
+        for opt in top_opts[:2]:  # Show top 2
+            print(f"  • {opt['type']} on {opt['target']} (priority: {opt['priority']})")
+
+
+async def show_autognosis_report(soc: SelfOrganizingCore) -> None:
+    """Show detailed autognosis report."""
+    if not hasattr(soc, 'autognosis') or not soc.autognosis:
+        print("Autognosis system not initialized")
+        return
+    
+    report = soc.get_autognosis_status()
+    
+    print(f"\n🧠 Detailed Autognosis Report")
+    print("=" * 50)
+    print(f"Timestamp: {report.get('timestamp')}")
+    print(f"System Status: {report.get('system_status')}")
+    
+    # Self-images
+    self_images = report.get('self_images', {})
+    print(f"\nHierarchical Self-Images ({len(self_images)} levels):")
+    for level, image_info in self_images.items():
+        print(f"  Level {level}: Confidence {image_info['confidence']:.2f}, "
+              f"{image_info['reflections_count']} reflections "
+              f"[{image_info['image_hash']}]")
+    
+    # All insights
+    insights = report.get('recent_insights', [])
+    print(f"\nRecent Meta-Cognitive Insights ({len(insights)}):")
+    for insight in insights:
+        print(f"  • [{insight['type']}] {insight['description']}")
+        print(f"    Confidence: {insight['confidence']:.2f}, "
+              f"Time: {insight['timestamp']}")
+    
+    # All optimizations
+    optimizations = report.get('top_optimizations', [])
+    print(f"\nOptimization Opportunities ({len(optimizations)}):")
+    for opt in optimizations:
+        print(f"  • {opt['type']} targeting {opt['target']}")
+        print(f"    Expected improvement: {opt['expected_improvement']:.1%}, "
+              f"Priority: {opt['priority']}")
+
+
+async def show_autognosis_insights(soc: SelfOrganizingCore) -> None:
+    """Show autognosis insights and self-awareness metrics."""
+    if not hasattr(soc, 'autognosis') or not soc.autognosis:
+        print("Autognosis system not initialized")
+        return
+    
+    print(f"\n🧠 Autognosis Self-Awareness Analysis")
+    print("=" * 50)
+    
+    # Get current self-images
+    current_images = soc.autognosis.current_self_images
+    
+    for level, self_image in current_images.items():
+        print(f"\nLevel {level} Self-Image (Confidence: {self_image.confidence:.2f}):")
+        
+        # Show behavioral patterns
+        if self_image.behavioral_patterns:
+            print("  Behavioral Patterns:")
+            for pattern, values in self_image.behavioral_patterns.items():
+                avg_value = sum(values) / len(values) if values else 0
+                print(f"    • {pattern}: {avg_value:.3f} (trend over {len(values)} observations)")
+        
+        # Show performance metrics
+        if self_image.performance_metrics:
+            print("  Performance Metrics:")
+            for metric, value in self_image.performance_metrics.items():
+                status = "Good" if value > 0.7 else "Moderate" if value > 0.4 else "Needs Attention"
+                print(f"    • {metric}: {value:.3f} ({status})")
+        
+        # Show meta-reflections
+        if self_image.meta_reflections:
+            print("  Meta-Reflections:")
+            for reflection in self_image.meta_reflections:
+                print(f"    • {reflection}")
+    
+    # Show self-awareness indicators
+    if current_images:
+        highest_level = max(current_images.keys())
+        if highest_level >= 2:
+            awareness_indicators = current_images[highest_level].cognitive_processes.get('self_awareness_indicators', {})
+            if awareness_indicators:
+                print(f"\nSelf-Awareness Indicators:")
+                for indicator, score in awareness_indicators.items():
+                    bar_length = int(score * 20)  # 20-character bar
+                    bar = "█" * bar_length + "░" * (20 - bar_length)
+                    print(f"  {indicator:20} {bar} {score:.2f}")
+    
+    print(f"\nAutognosis enables ORRRG to understand and optimize its own cognitive processes")
+    print(f"through hierarchical self-image building and meta-cognitive reflection.")
 
 
 async def daemon_mode(soc: SelfOrganizingCore) -> None:
