@@ -37,8 +37,10 @@ import json
 import yaml
 import importlib.util
 from concurrent.futures import ThreadPoolExecutor, ProcessPoolExecutor
+from datetime import datetime
 
 from .autognosis import AutognosisOrchestrator
+from .evolution_engine import EvolutionEngine, EvolutionaryGenome, EmergentPattern
 
 
 # Configure logging
@@ -107,6 +109,9 @@ class SelfOrganizingCore:
         # Initialize autognosis system
         self.autognosis = AutognosisOrchestrator()
         
+        # Initialize evolution engine
+        self.evolution_engine = EvolutionEngine()
+        
         # Initialize component definitions
         self.component_definitions = {
             "oj7s3": {
@@ -172,11 +177,17 @@ class SelfOrganizingCore:
         # Initialize autognosis system
         await self.autognosis.initialize(self)
         
+        # Initialize evolution engine
+        await self.evolution_engine.initialize(self._evaluate_component_fitness)
+        
         # Start event processing
         asyncio.create_task(self.process_events())
         
         # Start autognosis cycles
         asyncio.create_task(self._run_autognosis_cycles())
+        
+        # Start evolutionary processes
+        asyncio.create_task(self._run_evolution_cycles())
         
         self.running = True
         logger.info("Self-Organizing Core initialized successfully")
@@ -458,10 +469,269 @@ class SelfOrganizingCore:
         
         return status
     
+    async def _run_evolution_cycles(self) -> None:
+        """Run evolutionary cycles for system evolution."""
+        while self.running:
+            try:
+                # Evolve each active component
+                for component_name in self.active_components.keys():
+                    if component_name in self.components:
+                        current_state = self._extract_component_state(component_name)
+                        evolution_objectives = self._determine_evolution_objectives(component_name)
+                        
+                        evolved_genome = await self.evolution_engine.evolve_component(
+                            component_name, current_state, evolution_objectives
+                        )
+                        
+                        # Apply evolved improvements
+                        await self._apply_evolutionary_improvements(component_name, evolved_genome)
+                
+                # Synthesize emergent behaviors
+                emergent_patterns = await self.evolution_engine.synthesize_emergent_behaviors()
+                await self._integrate_emergent_patterns(emergent_patterns)
+                
+            except Exception as e:
+                logger.error(f"Error in evolution cycle: {e}")
+            
+            # Wait for next evolution cycle (longer interval than autognosis)
+            await asyncio.sleep(300)  # 5 minutes between evolution cycles
+    
+    def _extract_component_state(self, component_name: str) -> Dict[str, Any]:
+        """Extract current state of a component for evolution."""
+        component_info = self.components.get(component_name, {})
+        
+        return {
+            'capabilities': component_info.capabilities if hasattr(component_info, 'capabilities') else [],
+            'status': component_info.status if hasattr(component_info, 'status') else 'unknown',
+            'performance_metrics': {
+                'response_time': 1.0,  # Default placeholder
+                'throughput': 1.0,
+                'reliability': 0.8,
+                'efficiency': 0.7
+            },
+            'integration_patterns': ['async_processing', 'event_driven', 'modular_design'],
+            'optimization_level': 0.6,
+            'adaptation_capability': 0.5,
+            'learning_rate': 0.1,
+            'complexity_score': len(component_info.capabilities) * 0.1 if hasattr(component_info, 'capabilities') else 0.1
+        }
+    
+    def _determine_evolution_objectives(self, component_name: str) -> List[str]:
+        """Determine evolution objectives for a component."""
+        base_objectives = ['performance', 'integration', 'adaptation']
+        
+        # Component-specific objectives
+        component_info = self.components.get(component_name)
+        if component_info and hasattr(component_info, 'capabilities'):
+            if 'machine_learning' in component_info.capabilities:
+                base_objectives.append('ml_optimization')
+            if 'reasoning' in component_info.capabilities:
+                base_objectives.append('cognitive_enhancement')
+            if 'analysis' in component_info.capabilities:
+                base_objectives.append('analytical_depth')
+        
+        return base_objectives
+    
+    async def _evaluate_component_fitness(self, genome: EvolutionaryGenome, objectives: List[str]) -> float:
+        """Evaluate fitness of a component genome."""
+        fitness = 0.0
+        
+        # Base fitness from component integration
+        component_name = genome.component_id
+        if component_name in self.active_components:
+            fitness += 0.3  # Active components get bonus
+        
+        if component_name in self.knowledge_graph:
+            kg_entry = self.knowledge_graph[component_name]
+            fitness += len(kg_entry.get('connections', [])) * 0.1  # Integration bonus
+        
+        # Objective-specific evaluation
+        for objective in objectives:
+            if objective == 'performance':
+                perf_genes = [g for g in genome.genes.keys() if 'performance' in g or 'optimize' in g]
+                fitness += len(perf_genes) * 0.15
+            
+            elif objective == 'integration':
+                integration_genes = [g for g in genome.genes.keys() if 'integration' in g or 'connect' in g]
+                fitness += len(integration_genes) * 0.2
+            
+            elif objective == 'adaptation':
+                adaptive_genes = [g for g in genome.genes.keys() if 'adaptive' in g or 'learning' in g]
+                fitness += len(adaptive_genes) * 0.18
+        
+        # Evolution novelty bonus
+        fitness += len(genome.mutations) * 0.05
+        
+        # Autognosis synergy bonus
+        if hasattr(self, 'autognosis') and self.autognosis:
+            autognosis_status = self.autognosis.get_self_awareness_report()
+            if autognosis_status.get('total_insights', 0) > 0:
+                fitness += 0.1  # Bonus for systems with self-awareness
+        
+        return max(0.0, min(1.0, fitness))
+    
+    async def _apply_evolutionary_improvements(self, component_name: str, evolved_genome: EvolutionaryGenome) -> None:
+        """Apply evolutionary improvements to a component."""
+        try:
+            # Log evolutionary improvement
+            logger.info(f"Applying evolutionary improvements to {component_name} "
+                       f"(Generation {evolved_genome.generation}, Fitness: {evolved_genome.fitness_score:.3f})")
+            
+            # Update component configuration with evolved parameters
+            if component_name in self.components:
+                component = self.components[component_name]
+                
+                # Extract optimization parameters from evolved genes
+                for gene_name, gene_value in evolved_genome.genes.items():
+                    if 'performance' in gene_name and isinstance(gene_value, (int, float)):
+                        # Apply performance optimization
+                        if not hasattr(component, 'config'):
+                            component.config = {}
+                        component.config[gene_name] = gene_value
+                    
+                    elif 'integration' in gene_name:
+                        # Apply integration improvements
+                        await self._enhance_component_integration(component_name, gene_value)
+            
+            # Generate event for successful evolution
+            await self.event_bus.put({
+                "type": "evolutionary_improvement",
+                "component": component_name,
+                "generation": evolved_genome.generation,
+                "fitness": evolved_genome.fitness_score,
+                "mutations": len(evolved_genome.mutations),
+                "timestamp": datetime.now().isoformat()
+            })
+            
+        except Exception as e:
+            logger.error(f"Error applying evolutionary improvements to {component_name}: {e}")
+    
+    async def _enhance_component_integration(self, component_name: str, enhancement_value: Any) -> None:
+        """Enhance component integration based on evolutionary improvements."""
+        if component_name in self.knowledge_graph:
+            kg_entry = self.knowledge_graph[component_name]
+            
+            # Add evolved integration capabilities
+            if 'evolved_capabilities' not in kg_entry:
+                kg_entry['evolved_capabilities'] = []
+            
+            if isinstance(enhancement_value, str):
+                kg_entry['evolved_capabilities'].append(enhancement_value)
+            
+            # Enhance connections based on evolutionary insights
+            if 'connections' in kg_entry and len(kg_entry['connections']) > 0:
+                # Strengthen existing connections
+                for connection in kg_entry['connections']:
+                    if isinstance(connection, dict) and 'strength' in connection:
+                        connection['strength'] = min(1.0, connection['strength'] * 1.1)
+    
+    async def _integrate_emergent_patterns(self, emergent_patterns: List[EmergentPattern]) -> None:
+        """Integrate emergent patterns into the system."""
+        for pattern in emergent_patterns:
+            try:
+                logger.info(f"Integrating emergent pattern: {pattern.pattern_id} "
+                           f"(Type: {pattern.pattern_type}, Effectiveness: {pattern.effectiveness:.3f})")
+                
+                # Add pattern to knowledge graph
+                self.knowledge_graph[f"emergent_{pattern.pattern_id}"] = {
+                    'type': 'emergent_pattern',
+                    'pattern_type': pattern.pattern_type,
+                    'effectiveness': pattern.effectiveness,
+                    'complexity': pattern.complexity,
+                    'applications': pattern.applications,
+                    'emergence_path': pattern.emergence_path,
+                    'timestamp': pattern.timestamp.isoformat()
+                }
+                
+                # Apply pattern to relevant components
+                for application in pattern.applications:
+                    component_name = application.split('_')[0]  # Extract component name
+                    if component_name in self.components:
+                        await self._apply_emergent_pattern(component_name, pattern)
+                
+                # Generate event for emergent pattern integration
+                await self.event_bus.put({
+                    "type": "emergent_pattern_integrated",
+                    "pattern_id": pattern.pattern_id,
+                    "pattern_type": pattern.pattern_type,
+                    "effectiveness": pattern.effectiveness,
+                    "applications": pattern.applications,
+                    "timestamp": datetime.now().isoformat()
+                })
+                
+            except Exception as e:
+                logger.error(f"Error integrating emergent pattern {pattern.pattern_id}: {e}")
+    
+    async def _apply_emergent_pattern(self, component_name: str, pattern: EmergentPattern) -> None:
+        """Apply an emergent pattern to a specific component."""
+        try:
+            component = self.components[component_name]
+            
+            # Add emergent capability based on pattern
+            if not hasattr(component, 'emergent_capabilities'):
+                component.emergent_capabilities = []
+            
+            emergent_capability = {
+                'pattern_id': pattern.pattern_id,
+                'capability_type': pattern.pattern_type,
+                'effectiveness': pattern.effectiveness,
+                'integration_timestamp': datetime.now().isoformat()
+            }
+            
+            component.emergent_capabilities.append(emergent_capability)
+            
+            # Update knowledge graph with emergent enhancement
+            if component_name in self.knowledge_graph:
+                kg_entry = self.knowledge_graph[component_name]
+                if 'emergent_enhancements' not in kg_entry:
+                    kg_entry['emergent_enhancements'] = []
+                kg_entry['emergent_enhancements'].append(emergent_capability)
+            
+            logger.debug(f"Applied emergent pattern {pattern.pattern_id} to {component_name}")
+            
+        except Exception as e:
+            logger.error(f"Error applying emergent pattern to {component_name}: {e}")
+    
+    def get_evolution_status(self) -> Dict[str, Any]:
+        """Get current evolution system status."""
+        if not hasattr(self, 'evolution_engine'):
+            return {'status': 'not_initialized'}
+        
+        return asyncio.create_task(self.evolution_engine.get_evolution_status())
+    
+    async def trigger_targeted_evolution(self, component_name: str, objectives: List[str]) -> Dict[str, Any]:
+        """Trigger targeted evolution for a specific component."""
+        if component_name not in self.components:
+            return {'error': f'Component {component_name} not found'}
+        
+        try:
+            current_state = self._extract_component_state(component_name)
+            evolved_genome = await self.evolution_engine.evolve_component(
+                component_name, current_state, objectives
+            )
+            
+            await self._apply_evolutionary_improvements(component_name, evolved_genome)
+            
+            return {
+                'success': True,
+                'component': component_name,
+                'generation': evolved_genome.generation,
+                'fitness': evolved_genome.fitness_score,
+                'mutations': len(evolved_genome.mutations)
+            }
+            
+        except Exception as e:
+            logger.error(f"Error in targeted evolution for {component_name}: {e}")
+            return {'error': str(e)}
+
     async def shutdown(self) -> None:
         """Shutdown the Self-Organizing Core."""
         logger.info("Shutting down Self-Organizing Core...")
         self.running = False
+        
+        # Shutdown evolution engine
+        if hasattr(self, 'evolution_engine') and self.evolution_engine:
+            await self.evolution_engine.stop_continuous_evolution()
         
         # Shutdown autognosis system
         if hasattr(self, 'autognosis') and self.autognosis:

@@ -111,6 +111,12 @@ async def interactive_mode(soc: SelfOrganizingCore) -> None:
                 await handle_autognosis_command(soc)
             elif command.startswith('autognosis '):
                 await handle_autognosis_command(soc, command)
+            elif command == 'evolve':
+                await handle_evolution_command(soc)
+            elif command.startswith('evolve '):
+                await handle_evolution_command(soc, command)
+            elif command == 'emergence':
+                await handle_emergence_command(soc)
             else:
                 print(f"Unknown command: {command}. Type 'help' for available commands.")
                 
@@ -131,6 +137,9 @@ Available Commands:
   optimize      - Run system optimization
   autognosis    - Show autognosis (self-awareness) status
   autognosis STATUS/REPORT/INSIGHTS - Get detailed autognosis information
+  evolve        - Show evolution engine status
+  evolve COMPONENT [OBJECTIVES] - Trigger targeted evolution for component
+  emergence     - Show emergent patterns discovered by evolution
   help          - Show this help message
   quit          - Exit the system
 """
@@ -346,6 +355,130 @@ async def show_autognosis_insights(soc: SelfOrganizingCore) -> None:
     
     print(f"\nAutognosis enables ORRRG to understand and optimize its own cognitive processes")
     print(f"through hierarchical self-image building and meta-cognitive reflection.")
+
+
+async def handle_evolution_command(soc: SelfOrganizingCore, command: str = "evolve") -> None:
+    """Handle evolution-related commands."""
+    if not hasattr(soc, 'evolution_engine') or not soc.evolution_engine:
+        print("Evolution engine not initialized")
+        return
+    
+    command_parts = command.split()
+    
+    if len(command_parts) == 1:  # Just 'evolve'
+        await show_evolution_status(soc)
+    elif len(command_parts) >= 2:  # 'evolve COMPONENT [OBJECTIVES]'
+        component_name = command_parts[1]
+        objectives = command_parts[2:] if len(command_parts) > 2 else ['performance', 'adaptation', 'integration']
+        await trigger_component_evolution(soc, component_name, objectives)
+
+
+async def show_evolution_status(soc: SelfOrganizingCore) -> None:
+    """Show evolution engine status."""
+    print(f"\n🧬 Evolution Engine Status")
+    print("=" * 50)
+    
+    try:
+        status = await soc.evolution_engine.get_evolution_status()
+        
+        print(f"Evolution Running: {status.get('evolution_running', False)}")
+        print(f"Total Components: {status.get('total_components', 0)}")
+        print(f"Total Genomes: {status.get('total_genomes', 0)}")
+        print(f"Evolution History Length: {status.get('evolution_history_length', 0)}")
+        
+        # Show per-component evolution status
+        components = status.get('components', {})
+        if components:
+            print(f"\nComponent Evolution Status:")
+            for component_id, comp_status in components.items():
+                print(f"  • {component_id}:")
+                print(f"    Population Size: {comp_status.get('population_size', 0)}")
+                print(f"    Best Fitness: {comp_status.get('best_fitness', 0.0):.3f}")
+                print(f"    Current Generation: {comp_status.get('current_generation', 0)}")
+                print(f"    Total Mutations: {comp_status.get('total_mutations', 0)}")
+        
+        print(f"\n🚀 Evolution Engine Uses:")
+        print("  • Genetic Programming for component behavior evolution")
+        print("  • Quantum-inspired algorithms for enhanced exploration")
+        print("  • Emergent behavior synthesis from component interactions")
+        print("  • Adaptive mutation rates based on success history")
+        print("  • Cross-component genetic crossover for innovation")
+        
+    except Exception as e:
+        print(f"Error getting evolution status: {e}")
+
+
+async def trigger_component_evolution(soc: SelfOrganizingCore, component_name: str, objectives: List[str]) -> None:
+    """Trigger evolution for a specific component."""
+    print(f"\n🧬 Evolving Component: {component_name}")
+    print(f"Objectives: {', '.join(objectives)}")
+    print("=" * 50)
+    
+    try:
+        result = await soc.trigger_targeted_evolution(component_name, objectives)
+        
+        if 'error' in result:
+            print(f"❌ Evolution failed: {result['error']}")
+        else:
+            print(f"✅ Evolution completed successfully!")
+            print(f"  Component: {result['component']}")
+            print(f"  Generation: {result['generation']}")
+            print(f"  Fitness Score: {result['fitness']:.3f}")
+            print(f"  Mutations Applied: {result['mutations']}")
+            
+            if result['fitness'] > 0.7:
+                print(f"  🌟 High fitness achieved - significant improvement!")
+            elif result['fitness'] > 0.5:
+                print(f"  ✨ Good fitness - moderate improvement")
+            else:
+                print(f"  🔧 Lower fitness - more evolution cycles may be needed")
+    
+    except Exception as e:
+        print(f"❌ Error during evolution: {e}")
+
+
+async def handle_emergence_command(soc: SelfOrganizingCore) -> None:
+    """Handle emergence pattern analysis."""
+    if not hasattr(soc, 'evolution_engine') or not soc.evolution_engine:
+        print("Evolution engine not initialized")
+        return
+    
+    print(f"\n🌱 Emergent Behavior Patterns")
+    print("=" * 50)
+    
+    try:
+        # Trigger emergent pattern synthesis
+        emergent_patterns = await soc.evolution_engine.synthesize_emergent_behaviors()
+        
+        if not emergent_patterns:
+            print("No emergent patterns detected yet.")
+            print("Emergent behaviors develop as components evolve and interact.")
+            return
+        
+        print(f"Discovered {len(emergent_patterns)} emergent patterns:")
+        
+        for i, pattern in enumerate(emergent_patterns, 1):
+            print(f"\n{i}. Pattern: {pattern.pattern_id}")
+            print(f"   Type: {pattern.pattern_type}")
+            print(f"   Effectiveness: {pattern.effectiveness:.3f}")
+            print(f"   Complexity: {pattern.complexity:.3f}")
+            print(f"   Applications: {', '.join(pattern.applications)}")
+            print(f"   Emergence Path: {' -> '.join(pattern.emergence_path)}")
+            
+            # Show effectiveness rating
+            if pattern.effectiveness > 0.8:
+                print(f"   🌟 Highly effective emergent behavior")
+            elif pattern.effectiveness > 0.6:
+                print(f"   ✨ Moderately effective pattern")
+            else:
+                print(f"   🌱 Developing emergent pattern")
+        
+        print(f"\n💡 Emergent patterns represent novel behaviors that arise from")
+        print(f"component interactions and evolutionary processes. They can be")
+        print(f"automatically integrated to enhance system capabilities.")
+        
+    except Exception as e:
+        print(f"Error analyzing emergence: {e}")
 
 
 async def daemon_mode(soc: SelfOrganizingCore) -> None:

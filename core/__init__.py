@@ -8,6 +8,7 @@ multiple research and development approaches from various component repositories
 
 from .self_organizing_core import SelfOrganizingCore, ComponentInfo, ComponentInterface
 from .autognosis import AutognosisOrchestrator, SelfImage, MetaCognitiveInsight, HolisticInsight
+from .evolution_engine import EvolutionEngine, EvolutionaryGenome, EmergentPattern, GeneticOperator
 from .holistic_metamodel import (
     HolisticMetamodelOrchestrator, HieroglyphicMonad, DualComplementarity,
     TriadicSystem, SelfStabilizingCycle, OrganizationalDynamicsProcessor,
@@ -16,7 +17,7 @@ from .holistic_metamodel import (
     EvolutionaryHelix, EvolutionaryHelixStage
 )
 
-__version__ = "1.0.0"
+__version__ = "1.1.0"  # Updated version for evolution capabilities
 __author__ = "ReZonArc"
 
 __all__ = [
@@ -27,6 +28,10 @@ __all__ = [
     "SelfImage",
     "MetaCognitiveInsight",
     "HolisticInsight",
+    "EvolutionEngine",
+    "EvolutionaryGenome",
+    "EmergentPattern",
+    "GeneticOperator",
     "HolisticMetamodelOrchestrator",
     "HieroglyphicMonad",
     "DualComplementarity",
