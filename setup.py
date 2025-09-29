@@ -19,8 +19,8 @@ if requirements_path.exists():
 
 setup(
     name="orrrg",
-    version="1.0.0",
-    description="Omnipotent Research and Reasoning Reactive Grid - Self-Organizing Core Integration System",
+    version="1.1.0",  # Updated for evolution engine
+    description="Omnipotent Research and Reasoning Reactive Grid - Self-Organizing Core Integration System with Advanced Evolution Engine",
     long_description=long_description,
     long_description_content_type="text/markdown",
     author="ReZonArc",
