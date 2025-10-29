@@ -355,6 +355,29 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) for detailed guidelines.
 
 This project is licensed under the GNU Affero General Public License v3.0 - see the [LICENSE](LICENSE) file for details.
 
+## 📚 Documentation
+
+Comprehensive technical documentation is available in the `docs/` directory:
+
+### Core Documentation
+- **[Technical Architecture](docs/ARCHITECTURE.md)** - Comprehensive system architecture with Mermaid diagrams covering:
+  - High-level architecture and component interactions
+  - Data flow pipelines and integration patterns
+  - Evolution engine architecture
+  - Autognosis system hierarchy
+  - Deployment and security architecture
+  
+- **[Formal Specification (Z++)](docs/FORMAL_SPECIFICATION_ZPP.md)** - Mathematical specification using Z++ notation:
+  - Complete type system and schemas
+  - State transitions and operations
+  - Invariants and safety properties
+  - Behavioral and temporal specifications
+  - Refinement proofs
+
+### Specialized Documentation
+- **[Autognosis System](docs/AUTOGNOSIS.md)** - Hierarchical self-awareness capabilities
+- **[Holistic Metamodel](docs/HOLISTIC_METAMODEL.md)** - Eric Schwarz's organizational theory implementation
+
 ## 🙏 Acknowledgments
 
 ORRRG integrates and builds upon the excellent work of multiple open-source projects:
