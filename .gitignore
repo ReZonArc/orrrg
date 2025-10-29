@@ -54,4 +54,3 @@ htmlcov/
 # Large audit/result files
 audit_results.json
 *_audit_results.json
-core/__pycache__/
