@@ -257,7 +257,7 @@ For formal specification work:
 ### Version Compatibility
 - **Current Documentation Version**: 1.1.0
 - **ORRRG System Version**: 1.1.0
-- **Last Updated**: October 2025
+- **Last Updated**: October 29, 2025
 
 ### Contribution Guidelines
 When contributing to documentation:
@@ -278,8 +278,8 @@ When contributing to documentation:
 - **Formal spec questions**: Tag with "formal-methods" label
 
 ### Further Resources
-- **Source Code**: `/home/runner/work/orrrg/orrrg/`
-- **Examples**: `/home/runner/work/orrrg/orrrg/examples/`
+- **Source Code**: Repository root directory
+- **Examples**: `examples/` directory
 - **Tests**: Test files provide practical usage examples
 - **Configuration**: `config/orrrg_config.yaml` for system settings
 
