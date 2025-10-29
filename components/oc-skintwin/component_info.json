@@ -1,0 +1,18 @@
+{
+  "name": "oc-skintwin",
+  "description": "OpenCog cognitive architecture for artificial general intelligence",
+  "version": "0.1.0",
+  "upstream_url": "https://github.com/opencog/atomspace",
+  "upstream_project": "OpenCog AtomSpace",
+  "integration_type": "Library wrapper",
+  "dependencies": [
+    "opencog",
+    "networkx"
+  ],
+  "files": [
+    "atomspace_adapter.py",
+    "reasoning.py",
+    "knowledge.py"
+  ],
+  "status": "active"
+}

@@ -1,0 +1,18 @@
+{
+  "name": "echopiler",
+  "description": "Interactive compiler exploration and multi-language code analysis platform",
+  "version": "0.1.0",
+  "upstream_url": "https://github.com/compiler-explorer/compiler-explorer",
+  "upstream_project": "Compiler Explorer",
+  "integration_type": "API client wrapper",
+  "dependencies": [
+    "requests",
+    "aiohttp"
+  ],
+  "files": [
+    "client.py",
+    "analyzer.py",
+    "languages.py"
+  ],
+  "status": "active"
+}
