@@ -50,3 +50,7 @@ htmlcov/
 # Temporary files
 /tmp/
 *.tmp
+
+# Large audit/result files
+audit_results.json
+*_audit_results.json

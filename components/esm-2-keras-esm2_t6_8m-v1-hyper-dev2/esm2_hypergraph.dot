@@ -1,0 +1,20 @@
+digraph ESM2_Hypergraph_Simplified {
+  rankdir=LR;
+  node [shape=box, style=rounded];
+
+  "layer_-1" [label="Input\nProcessing"];
+  "layer_0" [label="Transformer\nLayer 0"];
+  "layer_1" [label="Transformer\nLayer 1"];
+  "layer_2" [label="Transformer\nLayer 2"];
+  "layer_3" [label="Transformer\nLayer 3"];
+  "layer_4" [label="Transformer\nLayer 4"];
+  "layer_5" [label="Transformer\nLayer 5"];
+  "layer_6" [label="Output\nProcessing"];
+  "layer_-1" -> "layer_0";
+  "layer_0" -> "layer_1";
+  "layer_1" -> "layer_2";
+  "layer_2" -> "layer_3";
+  "layer_3" -> "layer_4";
+  "layer_4" -> "layer_5";
+  "layer_5" -> "layer_6";
+}

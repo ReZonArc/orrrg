@@ -1,0 +1,7 @@
+# Core requirements for ESM-2 Hypergraph
+# No external dependencies required for basic functionality
+
+# Optional dependencies for enhanced visualization
+# graphviz  # For DOT graph visualization (optional)
+# matplotlib  # For plotting (optional)
+# networkx  # For advanced graph analysis (optional)
