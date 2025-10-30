@@ -1,0 +1,19 @@
+{
+  "name": "coscheminformatics",
+  "description": "Chemical information processing and molecular analysis",
+  "version": "0.1.0",
+  "upstream_url": "https://github.com/rdkit/rdkit",
+  "upstream_project": "RDKit",
+  "integration_type": "Chemical informatics wrapper",
+  "dependencies": [
+    "rdkit",
+    "numpy",
+    "pandas"
+  ],
+  "files": [
+    "molecular.py",
+    "properties.py",
+    "fingerprints.py"
+  ],
+  "status": "active"
+}

@@ -1,0 +1,19 @@
+{
+  "name": "coschemreasoner",
+  "description": "Chemical reasoning system with reaction prediction capabilities",
+  "version": "0.1.0",
+  "upstream_url": "https://github.com/rdkit/rdkit",
+  "upstream_project": "RDKit + ML Models",
+  "integration_type": "Chemical reasoning engine",
+  "dependencies": [
+    "rdkit",
+    "scikit-learn",
+    "numpy"
+  ],
+  "files": [
+    "reactions.py",
+    "synthesis.py",
+    "retrosynthesis.py"
+  ],
+  "status": "active"
+}

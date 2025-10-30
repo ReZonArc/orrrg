@@ -1,0 +1,19 @@
+{
+  "name": "cosmagi-bio",
+  "description": "Genomic and proteomic research using OpenCog bioinformatics tools",
+  "version": "0.1.0",
+  "upstream_url": "https://github.com/opencog/opencog",
+  "upstream_project": "OpenCog + BioPython",
+  "integration_type": "Bioinformatics wrapper",
+  "dependencies": [
+    "biopython",
+    "opencog",
+    "numpy"
+  ],
+  "files": [
+    "genomics.py",
+    "proteins.py",
+    "bio_knowledge.py"
+  ],
+  "status": "active"
+}
