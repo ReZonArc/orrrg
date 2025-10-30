@@ -1,0 +1,201 @@
+;; Cosmetic Chemistry Atom Types for OpenCog Cheminformatics Framework
+;; This file extends the base cheminformatics atom types with specialized
+;; support for cosmetic chemistry applications, including formulation modeling,
+;; ingredient analysis, and regulatory compliance.
+
+;; ===================================================================
+;; INGREDIENT CATEGORY TYPES
+;; ===================================================================
+
+;; Active Ingredients - Primary functional ingredients
+ACTIVE_INGREDIENT <- ATOM
+
+;; Preservatives - Antimicrobial agents
+PRESERVATIVE <- ATOM
+
+;; Emulsifiers - Blend oil and water phases
+EMULSIFIER <- ATOM
+
+;; Humectants - Moisture-retaining agents
+HUMECTANT <- ATOM
+
+;; Surfactants - Surface tension reducers
+SURFACTANT <- ATOM
+
+;; Thickeners - Viscosity modifiers
+THICKENER <- ATOM
+
+;; Emollients - Skin conditioning agents
+EMOLLIENT <- ATOM
+
+;; Antioxidants - Oxidation inhibitors
+ANTIOXIDANT <- ATOM
+
+;; UV Filters - Sun protection agents
+UV_FILTER <- ATOM
+
+;; Fragrances - Scenting agents
+FRAGRANCE <- ATOM
+
+;; Colorants - Coloring agents
+COLORANT <- ATOM
+
+;; pH Adjusters - pH balancing agents
+PH_ADJUSTER <- ATOM
+
+;; ===================================================================
+;; FORMULATION TYPES
+;; ===================================================================
+
+;; Skincare Formulations
+SKINCARE_FORMULATION <- ATOM
+
+;; Haircare Formulations
+HAIRCARE_FORMULATION <- ATOM
+
+;; Makeup Formulations
+MAKEUP_FORMULATION <- ATOM
+
+;; Fragrance Formulations
+FRAGRANCE_FORMULATION <- ATOM
+
+;; ===================================================================
+;; PROPERTY TYPES
+;; ===================================================================
+
+;; pH Properties
+PH_PROPERTY <- ATOM
+
+;; Viscosity Properties
+VISCOSITY_PROPERTY <- ATOM
+
+;; Stability Properties
+STABILITY_PROPERTY <- ATOM
+
+;; Texture Properties
+TEXTURE_PROPERTY <- ATOM
+
+;; Sun Protection Factor Properties
+SPF_PROPERTY <- ATOM
+
+;; ===================================================================
+;; INTERACTION TYPES
+;; ===================================================================
+
+;; Compatibility Links - Ingredients that work well together
+COMPATIBILITY_LINK <- LINK
+
+;; Incompatibility Links - Ingredients that should not be combined
+INCOMPATIBILITY_LINK <- LINK
+
+;; Synergy Links - Ingredients that enhance each other's effects
+SYNERGY_LINK <- LINK
+
+;; Antagonism Links - Ingredients that reduce each other's effectiveness
+ANTAGONISM_LINK <- LINK
+
+;; ===================================================================
+;; SAFETY AND REGULATORY TYPES
+;; ===================================================================
+
+;; Safety Assessment
+SAFETY_ASSESSMENT <- ATOM
+
+;; Allergen Classification
+ALLERGEN_CLASSIFICATION <- ATOM
+
+;; Concentration Limits
+CONCENTRATION_LIMIT <- ATOM
+
+;; ===================================================================
+;; SPECIALIZED COSMETIC ATOM TYPES
+;; ===================================================================
+
+;; Delivery System Types
+LIPOSOME <- ATOM
+MICELLE <- ATOM
+NANOCAPSULE <- ATOM
+
+;; Sensory Properties
+SILKY_TEXTURE <- ATOM
+MATTE_FINISH <- ATOM
+GLOSSY_FINISH <- ATOM
+
+;; Application Methods
+SPRAY_APPLICATION <- ATOM
+CREAM_APPLICATION <- ATOM
+SERUM_APPLICATION <- ATOM
+
+;; Target Areas
+FACIAL_APPLICATION <- ATOM
+BODY_APPLICATION <- ATOM
+HAIR_APPLICATION <- ATOM
+
+;; Performance Claims
+ANTI_AGING_CLAIM <- ATOM
+MOISTURIZING_CLAIM <- ATOM
+BRIGHTENING_CLAIM <- ATOM
+CLEANSING_CLAIM <- ATOM
+
+;; Regulatory Status
+FDA_APPROVED <- ATOM
+EU_COMPLIANT <- ATOM
+NATURAL_CERTIFIED <- ATOM
+ORGANIC_CERTIFIED <- ATOM
+
+;; ===================================================================
+;; HELPER FUNCTIONS AND PREDICATES
+;; ===================================================================
+
+;; Function to check ingredient compatibility
+(define (compatible? ingredient1 ingredient2)
+    (cog-link 'COMPATIBILITY_LINK ingredient1 ingredient2))
+
+;; Function to check ingredient incompatibility
+(define (incompatible? ingredient1 ingredient2)
+    (cog-link 'INCOMPATIBILITY_LINK ingredient1 ingredient2))
+
+;; Function to check synergistic effects
+(define (synergistic? ingredient1 ingredient2)
+    (cog-link 'SYNERGY_LINK ingredient1 ingredient2))
+
+;; Function to check antagonistic effects
+(define (antagonistic? ingredient1 ingredient2)
+    (cog-link 'ANTAGONISM_LINK ingredient1 ingredient2))
+
+;; Function to validate formulation safety
+(define (safe-formulation? formulation)
+    (and
+        (not (any-incompatible-pairs? formulation))
+        (within-concentration-limits? formulation)
+        (allergen-declared? formulation)))
+
+;; ===================================================================
+;; COSMETIC CHEMISTRY KNOWLEDGE BASE HELPERS
+;; ===================================================================
+
+;; Common ingredient classifications
+(define hyaluronic-acid (ACTIVE_INGREDIENT "hyaluronic_acid"))
+(define glycerin (HUMECTANT "glycerin"))
+(define phenoxyethanol (PRESERVATIVE "phenoxyethanol"))
+(define cetyl-alcohol (EMULSIFIER "cetyl_alcohol"))
+(define niacinamide (ACTIVE_INGREDIENT "niacinamide"))
+(define vitamin-c (ACTIVE_INGREDIENT "vitamin_c"))
+(define retinol (ACTIVE_INGREDIENT "retinol"))
+(define vitamin-e (ANTIOXIDANT "vitamin_e"))
+
+;; Example compatibility relationships
+(COMPATIBILITY_LINK hyaluronic-acid niacinamide)
+(INCOMPATIBILITY_LINK vitamin-c retinol)
+(SYNERGY_LINK vitamin-c vitamin-e)
+
+;; pH compatibility ranges
+(define (ph-compatible? ingredient1 ingredient2)
+    (let ((ph1 (get-ph-range ingredient1))
+          (ph2 (get-ph-range ingredient2)))
+        (ranges-overlap? ph1 ph2)))
+
+;; Concentration limit checking
+(define (within-limits? ingredient concentration)
+    (let ((limit (get-concentration-limit ingredient)))
+        (<= concentration limit)))
