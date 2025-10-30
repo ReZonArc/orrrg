@@ -1,77 +1,41 @@
-# cosmagi-bio
+AGI-Bio
+=======
 
-Genomic and proteomic research using OpenCog bioinformatics tools
+Genomic and proteomic research using the OpenCog toolset.
+This includes experiments in applying MOSES, PLN, pattern mining
+and other OpenCog components.
 
-## Status
+The [**MOZI.AI**](https://github.com/MOZI-AI) repositories make
+use of this package, and extend the current development of OpenCog-based
+bioinformatics tools as [**SingularityNET**](https://singularitynet.io/)
+sevices.
 
-**Active Implementation** - Integration wrapper for [OpenCog + BioPython](https://github.com/opencog/opencog)
-
-## Overview
-
-This component provides a lightweight Bioinformatics wrapper that integrates OpenCog + BioPython 
-into the ORRRG self-organizing core framework.
-
-## Integration Type
-
-**Bioinformatics wrapper** - This is not a full clone of the upstream repository. Instead, it provides:
-- Clean Python API for ORRRG integration
-- Adapter pattern for the Self-Organizing Core
-- Standard ComponentInterface implementation
-- Efficient resource management
-
-## Dependencies
-
-This component requires:
-- biopython
-- opencog
-- numpy
-
-To install dependencies:
-```bash
-pip install biopython opencog numpy
+Building and Installing
+=======================
+To build the AGI-Bio code, you will need to build and install the
+[OpenCog AtomSpace](https://github.com/opencog/atomspace) first.
+All of the pre-requistes listed there are sufficient to also build
+this project. Building is as "usual":
+```
+    cd to project root dir
+    mkdir build
+    cd build
+    cmake ..
+    make -j
+    sudo make install
+    make -j test
 ```
 
-## Usage
+Overview
+========
+The directory layout is as follows:
 
-```python
-from components.cosmagi-bio import Cosmagi_BioComponent
+* **[bioscience](./bioscience)** - Provides the `GeneNode` and
+  `MoleculeNode` Atom types.
 
-# Initialize component
-component = Cosmagi_BioComponent()
-await component.initialize({})
+* **[knowledge-import](./knowledge-import)** -- scripts for importing
+   external knowledge bases into the AtomSpace.
 
-# Use component functionality
-result = await component.process({
-    "type": "analysis",
-    "data": {...}
-})
-```
-
-## Integration with ORRRG
-
-This component integrates with the ORRRG Self-Organizing Core through the standard ComponentInterface:
-
-```python
-class ComponentInterface(ABC):
-    async def initialize(self, config: Dict[str, Any]) -> bool
-    async def process(self, data: Dict[str, Any]) -> Dict[str, Any]
-    async def cleanup(self) -> None
-    def get_capabilities(self) -> List[str]
-```
-
-## Files
-
-- `genomics.py` - Implementation module
-- `proteins.py` - Implementation module
-- `bio_knowledge.py` - Implementation module
-
-## Upstream Project
-
-This component is based on [OpenCog + BioPython](https://github.com/opencog/opencog).
-
-For full documentation of the upstream project, see the [upstream repository](https://github.com/opencog/opencog).
-
-## License
-
-This integration wrapper is part of ORRRG and licensed under AGPL v3.0.
-The upstream project may have its own license - please refer to the upstream repository.
+* **[moses-scripts](./moses-scripts)** -- scripts for importing MOSES
+  models; such models distinguish binary phenotype categories based
+  on gene expression data.
