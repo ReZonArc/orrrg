@@ -1,0 +1,26 @@
+---
+title: ESM-2 Model Architecture Flow
+---
+
+graph TD
+    A[Input Tokens] --> B[Token Embedding<br/>vocab=33→hidden=320]
+    A --> C[Rotary Positional<br/>Encoding]
+
+    B --> D0[Transformer Layer 0]
+    C --> D0
+
+    D0 --> D1[Transformer Layer 1]
+    D1 --> D2[Transformer Layer 2]
+    D2 --> D3[Transformer Layer 3]
+    D3 --> D4[Transformer Layer 4]
+    D4 --> D5[Transformer Layer 5]
+
+    D5 --> E[Final LayerNorm]
+    E --> F[Output Head]
+    F --> G[Output Logits<br/>hidden=320→vocab=33]
+
+    subgraph "Each Transformer Layer"
+        H[Multi-Head Attention<br/>20 heads, dim=16] --> I[Residual + LayerNorm]
+        I --> J[Feed-Forward Network<br/>320→1280→320]
+        J --> K[Residual + LayerNorm]
+    end

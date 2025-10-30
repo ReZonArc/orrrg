@@ -1,0 +1,237 @@
+#!/usr/bin/opencog/scm
+;;;
+;;; OpenCog Cheminformatics Framework - Cosmetic Chemistry Atom Types
+;;; Extended atom type system for cosmetic ingredient analysis and formulation
+;;;
+;;; This file defines 35+ cosmetic-specific atom types for comprehensive
+;;; cosmetic chemistry applications including ingredient modeling, formulation
+;;; analysis, compatibility checking, and regulatory compliance.
+;;;
+
+(use-modules (opencog))
+(use-modules (opencog atom-types))
+
+;;;
+;;; INGREDIENT CATEGORY ATOM TYPES
+;;; Core ingredient functional classifications
+;;;
+
+;; Active ingredients - primary functional compounds
+(define-type 'ACTIVE_INGREDIENT 'Concept
+  "Represents active cosmetic ingredients that provide primary skincare benefits")
+
+;; Preservatives - antimicrobial protection
+(define-type 'PRESERVATIVE 'Concept
+  "Represents preservative ingredients that prevent microbial growth")
+
+;; Emulsifiers - system stabilizers
+(define-type 'EMULSIFIER 'Concept
+  "Represents emulsifying agents that stabilize oil-water systems")
+
+;; Humectants - moisture retention
+(define-type 'HUMECTANT 'Concept
+  "Represents humectant ingredients that attract and retain moisture")
+
+;; Surfactants - cleansing and surface activity
+(define-type 'SURFACTANT 'Concept
+  "Represents surface-active agents for cleansing and emulsification")
+
+;; Thickeners - viscosity modification
+(define-type 'THICKENER 'Concept
+  "Represents thickening agents that modify product viscosity and texture")
+
+;; Emollients - skin conditioning
+(define-type 'EMOLLIENT 'Concept
+  "Represents emollient ingredients that soften and smooth skin")
+
+;; Antioxidants - oxidative protection
+(define-type 'ANTIOXIDANT 'Concept
+  "Represents antioxidant compounds that prevent oxidative damage")
+
+;; UV filters - sun protection
+(define-type 'UV_FILTER 'Concept
+  "Represents UV filtering compounds that provide sun protection")
+
+;; Fragrances - sensory enhancement
+(define-type 'FRAGRANCE 'Concept
+  "Represents fragrance ingredients that provide scent")
+
+;; Colorants - aesthetic enhancement
+(define-type 'COLORANT 'Concept
+  "Represents coloring agents for aesthetic enhancement")
+
+;; pH adjusters - formulation stability
+(define-type 'PH_ADJUSTER 'Concept
+  "Represents pH adjusting agents for formulation stability")
+
+;;;
+;;; FORMULATION TYPE ATOM TYPES
+;;; Product category classifications
+;;;
+
+;; Skincare formulations
+(define-type 'SKINCARE_FORMULATION 'Concept
+  "Represents complete skincare product formulations")
+
+;; Haircare formulations
+(define-type 'HAIRCARE_FORMULATION 'Concept
+  "Represents complete haircare product formulations")
+
+;; Makeup formulations
+(define-type 'MAKEUP_FORMULATION 'Concept
+  "Represents complete makeup product formulations")
+
+;; Fragrance formulations
+(define-type 'FRAGRANCE_FORMULATION 'Concept
+  "Represents complete fragrance product formulations")
+
+;;;
+;;; PROPERTY TYPE ATOM TYPES
+;;; Physical and chemical property measurements
+;;;
+
+;; pH property measurements
+(define-type 'PH_PROPERTY 'Predicate
+  "Represents pH measurements and ranges for formulations")
+
+;; Viscosity property measurements
+(define-type 'VISCOSITY_PROPERTY 'Predicate
+  "Represents viscosity measurements and characteristics")
+
+;; Stability property assessments
+(define-type 'STABILITY_PROPERTY 'Predicate
+  "Represents formulation stability characteristics and testing")
+
+;; Texture property evaluations
+(define-type 'TEXTURE_PROPERTY 'Predicate
+  "Represents sensory texture properties and feel")
+
+;; SPF property measurements
+(define-type 'SPF_PROPERTY 'Predicate
+  "Represents sun protection factor measurements")
+
+;;;
+;;; INTERACTION TYPE ATOM TYPES
+;;; Ingredient interaction relationships
+;;;
+
+;; Compatibility relationships
+(define-type 'COMPATIBILITY_LINK 'Link
+  "Represents compatible ingredient combinations")
+
+;; Incompatibility relationships
+(define-type 'INCOMPATIBILITY_LINK 'Link
+  "Represents incompatible ingredient combinations that should be avoided")
+
+;; Synergistic relationships
+(define-type 'SYNERGY_LINK 'Link
+  "Represents synergistic ingredient combinations with enhanced benefits")
+
+;; Antagonistic relationships
+(define-type 'ANTAGONISM_LINK 'Link
+  "Represents antagonistic ingredient combinations with reduced benefits")
+
+;;;
+;;; SAFETY AND REGULATORY ATOM TYPES
+;;; Safety assessment and regulatory compliance
+;;;
+
+;; Safety assessments
+(define-type 'SAFETY_ASSESSMENT 'Predicate
+  "Represents safety evaluation data for ingredients")
+
+;; Allergen classifications
+(define-type 'ALLERGEN_CLASSIFICATION 'Predicate
+  "Represents allergen potential and classification data")
+
+;; Concentration limits
+(define-type 'CONCENTRATION_LIMIT 'Predicate
+  "Represents regulatory concentration limits for ingredients")
+
+;;;
+;;; SPECIALIZED COSMETIC ATOM TYPES
+;;; Domain-specific extensions
+;;;
+
+;; Penetration enhancers
+(define-type 'PENETRATION_ENHANCER 'Concept
+  "Represents ingredients that enhance skin penetration")
+
+;; Chelating agents
+(define-type 'CHELATING_AGENT 'Concept
+  "Represents chelating agents that bind metal ions")
+
+;; Film formers
+(define-type 'FILM_FORMER 'Concept
+  "Represents ingredients that form protective films")
+
+;; Conditioning agents
+(define-type 'CONDITIONING_AGENT 'Concept
+  "Represents hair and skin conditioning ingredients")
+
+;; Opacifying agents
+(define-type 'OPACIFYING_AGENT 'Concept
+  "Represents ingredients that provide opacity and coverage")
+
+;; Pearlizing agents
+(define-type 'PEARLIZING_AGENT 'Concept
+  "Represents ingredients that provide pearlescent effects")
+
+;;;
+;;; EFFICACY AND PERFORMANCE ATOM TYPES
+;;; Performance measurement and evaluation
+;;;
+
+;; Efficacy measurements
+(define-type 'EFFICACY_MEASUREMENT 'Predicate
+  "Represents clinical efficacy data and measurements")
+
+;; Bioavailability assessments
+(define-type 'BIOAVAILABILITY_ASSESSMENT 'Predicate
+  "Represents ingredient bioavailability and absorption data")
+
+;; Clinical trial data
+(define-type 'CLINICAL_TRIAL_DATA 'Predicate
+  "Represents clinical trial results and evidence")
+
+;; Consumer testing results
+(define-type 'CONSUMER_TESTING_RESULT 'Predicate
+  "Represents consumer perception and satisfaction data")
+
+;;;
+;;; FORMULATION PROCESS ATOM TYPES
+;;; Manufacturing and processing considerations
+;;;
+
+;; Processing conditions
+(define-type 'PROCESSING_CONDITION 'Predicate
+  "Represents manufacturing processing requirements")
+
+;; Temperature stability
+(define-type 'TEMPERATURE_STABILITY 'Predicate
+  "Represents temperature stability characteristics")
+
+;; Mixing compatibility
+(define-type 'MIXING_COMPATIBILITY 'Predicate
+  "Represents ingredient mixing and processing compatibility")
+
+;;;
+;;; EXPORT ATOM TYPE DEFINITIONS
+;;; Make atom types available for use
+;;;
+
+;; Export all cosmetic chemistry atom types for use in applications
+(export ACTIVE_INGREDIENT PRESERVATIVE EMULSIFIER HUMECTANT SURFACTANT
+        THICKENER EMOLLIENT ANTIOXIDANT UV_FILTER FRAGRANCE COLORANT PH_ADJUSTER
+        SKINCARE_FORMULATION HAIRCARE_FORMULATION MAKEUP_FORMULATION FRAGRANCE_FORMULATION
+        PH_PROPERTY VISCOSITY_PROPERTY STABILITY_PROPERTY TEXTURE_PROPERTY SPF_PROPERTY
+        COMPATIBILITY_LINK INCOMPATIBILITY_LINK SYNERGY_LINK ANTAGONISM_LINK
+        SAFETY_ASSESSMENT ALLERGEN_CLASSIFICATION CONCENTRATION_LIMIT
+        PENETRATION_ENHANCER CHELATING_AGENT FILM_FORMER CONDITIONING_AGENT
+        OPACIFYING_AGENT PEARLIZING_AGENT EFFICACY_MEASUREMENT BIOAVAILABILITY_ASSESSMENT
+        CLINICAL_TRIAL_DATA CONSUMER_TESTING_RESULT PROCESSING_CONDITION
+        TEMPERATURE_STABILITY MIXING_COMPATIBILITY)
+
+;;;
+;;; End of cosmetic chemistry atom types definition
+;;;

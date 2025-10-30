@@ -1,0 +1,24 @@
+---
+title: Hypergraph Node and Edge Distribution
+---
+
+graph LR
+    subgraph "Hypergraph Components"
+        subgraph "Node Types (64 total)"
+            EMBEDDING[Embedding: 1]
+            POSITIONAL[Positional: 1]
+            LINEAR[Linear: 36]
+            ATTENTION[Attention: 6]
+            LAYERNORM[Layernorm: 13]
+            ACTIVATION[Activation: 6]
+            OUTPUT[Output: 1]
+        end
+
+        subgraph "Edge Types (41 total)"
+            DATAFLOW[Data Flow: 11]
+            ATTENTIONPREP[Attention Prep: 6]
+            ATTENTION[Attention: 6]
+            RESIDUAL[Residual: 12]
+            FEEDFORWARD[Feed Forward: 6]
+        end
+    end

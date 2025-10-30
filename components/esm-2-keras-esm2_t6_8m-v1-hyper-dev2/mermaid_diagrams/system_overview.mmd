@@ -1,0 +1,32 @@
+---
+title: ESM-2 Hypergraph System Overview
+---
+
+graph TB
+    subgraph "ESM-2 Hypergraph System"
+        A[ESM-2 Model Config] --> B[Hypergraph Builder]
+        B --> C[ESM2Hypergraph<br/>64 Nodes, 41 Edges]
+        C --> D[Query Engine]
+        C --> E[Visualizer]
+        C --> F[JSON Export]
+        
+        D --> G[Analysis Results]
+        E --> H[DOT Graph]
+        E --> I[Reports]
+        E --> M[Mermaid Diagrams]
+        F --> J[Hypergraph Data]
+        
+        subgraph "Core Components"
+            C
+            D
+            E
+        end
+        
+        subgraph "Outputs"
+            G
+            H
+            I
+            J
+            M
+        end
+    end

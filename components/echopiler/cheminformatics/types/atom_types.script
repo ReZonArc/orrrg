@@ -1,0 +1,127 @@
+;; Cosmetic Chemistry Atom Types for OpenCog Cheminformatics Framework
+;; This file defines specialized atom types for cosmetic chemistry applications
+
+;; Base Cheminformatics Types
+(define-type "MOLECULE" "ConceptNode")
+(define-type "CHEMICAL_ELEMENT" "ConceptNode")
+(define-type "FUNCTIONAL_GROUP" "ConceptNode")
+
+;; Cosmetic Ingredient Categories
+(define-type "ACTIVE_INGREDIENT" "MOLECULE"
+  "Primary active component providing specific cosmetic benefits")
+(define-type "PRESERVATIVE" "MOLECULE"
+  "Component preventing microbial growth and extending shelf life")
+(define-type "EMULSIFIER" "MOLECULE"
+  "Component enabling mixing of oil and water phases")  
+(define-type "HUMECTANT" "MOLECULE"
+  "Component attracting and retaining moisture")
+(define-type "SURFACTANT" "MOLECULE"
+  "Surface-active agent for cleansing or foaming properties")
+(define-type "THICKENER" "MOLECULE"
+  "Component providing viscosity and texture modification")
+(define-type "EMOLLIENT" "MOLECULE"
+  "Component providing softening and smoothing properties")
+(define-type "ANTIOXIDANT" "MOLECULE"
+  "Component preventing oxidation and rancidity")
+(define-type "UV_FILTER" "MOLECULE"
+  "Component providing protection from UV radiation")
+(define-type "FRAGRANCE" "MOLECULE"
+  "Component providing pleasant scent")
+(define-type "COLORANT" "MOLECULE"
+  "Component providing color to cosmetic products")
+(define-type "PH_ADJUSTER" "MOLECULE"
+  "Component for adjusting and buffering pH levels")
+
+;; Specialized Ingredient Subtypes
+(define-type "NATURAL_EXTRACT" "ACTIVE_INGREDIENT"
+  "Active ingredient derived from natural sources")
+(define-type "SYNTHETIC_ACTIVE" "ACTIVE_INGREDIENT"
+  "Synthetically produced active ingredient")
+(define-type "PEPTIDE" "ACTIVE_INGREDIENT"
+  "Protein-based active ingredient")
+(define-type "VITAMIN" "ACTIVE_INGREDIENT"
+  "Vitamin-based active ingredient")
+(define-type "MINERAL" "ACTIVE_INGREDIENT"
+  "Mineral-based active ingredient")
+
+;; Formulation Types
+(define-type "COSMETIC_FORMULATION" "ConceptNode"
+  "Complete cosmetic product formulation")
+(define-type "SKINCARE_FORMULATION" "COSMETIC_FORMULATION"
+  "Formulation specifically for skin care applications")
+(define-type "HAIRCARE_FORMULATION" "COSMETIC_FORMULATION"
+  "Formulation specifically for hair care applications")
+(define-type "MAKEUP_FORMULATION" "COSMETIC_FORMULATION"
+  "Formulation for decorative cosmetics")
+(define-type "FRAGRANCE_FORMULATION" "COSMETIC_FORMULATION"
+  "Formulation for perfumes and scented products")
+
+;; Property Types
+(define-type "COSMETIC_PROPERTY" "ConceptNode"
+  "Physical or chemical property relevant to cosmetics")
+(define-type "PH_PROPERTY" "COSMETIC_PROPERTY"
+  "pH level and buffering properties")
+(define-type "VISCOSITY_PROPERTY" "COSMETIC_PROPERTY"
+  "Flow and texture characteristics")
+(define-type "STABILITY_PROPERTY" "COSMETIC_PROPERTY"
+  "Chemical and physical stability over time")
+(define-type "TEXTURE_PROPERTY" "COSMETIC_PROPERTY"
+  "Sensory and tactile characteristics")
+(define-type "SPF_PROPERTY" "COSMETIC_PROPERTY"
+  "Sun protection factor for UV filters")
+(define-type "SOLUBILITY_PROPERTY" "COSMETIC_PROPERTY"
+  "Solubility characteristics in different phases")
+
+;; Interaction Types (Links)
+(define-type "COMPATIBILITY_LINK" "Link"
+  "Indicates ingredients that work well together")
+(define-type "INCOMPATIBILITY_LINK" "Link"
+  "Indicates ingredients that should not be combined")
+(define-type "SYNERGY_LINK" "Link"
+  "Indicates ingredients that enhance each other's effects")
+(define-type "ANTAGONISM_LINK" "Link"
+  "Indicates ingredients that counteract each other")
+
+;; Formulation Links
+(define-type "CONTAINS_INGREDIENT" "Link"
+  "Links formulation to its constituent ingredients")
+(define-type "HAS_PROPERTY" "Link"
+  "Links ingredient or formulation to its properties")
+(define-type "CONCENTRATION_LINK" "Link"
+  "Specifies concentration of ingredient in formulation")
+
+;; Safety and Regulatory Types
+(define-type "SAFETY_ASSESSMENT" "ConceptNode"
+  "Safety evaluation data for cosmetic ingredients")
+(define-type "ALLERGEN_CLASSIFICATION" "ConceptNode"
+  "Classification of potential allergenic properties")
+(define-type "CONCENTRATION_LIMIT" "ConceptNode"
+  "Regulatory limits on ingredient concentrations")
+(define-type "REGULATORY_STATUS" "ConceptNode"
+  "Approval status in different regulatory jurisdictions")
+
+;; Additional Specialized Types
+(define-type "DELIVERY_SYSTEM" "ConceptNode"
+  "Method for delivering active ingredients")
+(define-type "PACKAGING_TYPE" "ConceptNode"
+  "Container type affecting product stability")
+(define-type "APPLICATION_METHOD" "ConceptNode"
+  "How the product is intended to be applied")
+
+;; Sensory Properties
+(define-type "SENSORY_PROPERTY" "COSMETIC_PROPERTY"
+  "Properties perceived through human senses")
+(define-type "VISUAL_PROPERTY" "SENSORY_PROPERTY"
+  "Appearance-related properties")
+(define-type "TACTILE_PROPERTY" "SENSORY_PROPERTY"
+  "Touch and feel properties")
+(define-type "OLFACTORY_PROPERTY" "SENSORY_PROPERTY"
+  "Scent and aroma properties")
+
+;; Environmental and Sustainability Types
+(define-type "ENVIRONMENTAL_IMPACT" "ConceptNode"
+  "Environmental effects of ingredients or formulations")
+(define-type "BIODEGRADABILITY" "ENVIRONMENTAL_IMPACT"
+  "Rate and extent of biological breakdown")
+(define-type "SUSTAINABILITY_RATING" "ConceptNode"
+  "Assessment of sustainable sourcing and production")

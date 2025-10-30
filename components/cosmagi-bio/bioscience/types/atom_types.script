@@ -1,0 +1,144 @@
+// Custom Atom types for the bio scientist project
+
+// The Gene type represents human gene symbols from https://www.genenames.org/ database.
+GENE_NODE <- CONCEPT_NODE
+
+// The Molecule type represents a biological molecule https://en.wikipedia.org/wiki/Biomolecule
+MOLECULE_NODE <- CONCEPT_NODE
+
+// The Ontology type represents Biological ontologies
+ONTOLOGY_NODE <- CONCEPT_NODE
+
+// From Gene ontology http://geneontology.org/docs/ontology-documentation/
+// The CellularComponent type identifies relative cell locations in which a gene performs a function.
+CELLULAR_COMPONENT_NODE <- ONTOLOGY_NODE
+// The MolecularFunction type identifies molecular-level activities performed by gene.
+MOLECULAR_FUNCTION_NODE <- ONTOLOGY_NODE
+// The BiologicalProcess type identifies biological programs accomplished by multiple molecular activities.
+BIOLOGICAL_PROCESS_NODE <- ONTOLOGY_NODE
+
+// The Pathway type represents Biological pathways
+PATHWAY_NODE <- CONCEPT_NODE
+
+// The Reactome type identifies biological pathways from https://reactome.org/ database.
+REACTOME_NODE <- PATHWAY_NODE
+// The Smp type identifies biological pathways from https://smpdb.ca/ database.
+SMP_NODE <- PATHWAY_NODE
+// The PharmGkb type identifies biological pathways from https://www.pharmgkb.org/ database.
+PHARM_GKB_NODE <- PATHWAY_NODE
+
+// The Uberon type identifies biological ontologies from https://www.ebi.ac.uk/ols/ontologies/uberon
+UBERON_NODE <- ONTOLOGY_NODE
+// The Cell type identifies biological ontologies from http://www.obofoundry.org/ontology/cl.html
+CELL_NODE <- ONTOLOGY_NODE
+// The ChebiOntology identifies biological ontologies from http://www.obofoundry.org/ontology/chebi.html
+CHEBI_ONTOLOGY_NODE <- ONTOLOGY_NODE
+
+// The Rna type represents Ribonucleic acid https://en.wikipedia.org/wiki/RNA
+RNA_NODE <- MOLECULE_NODE
+// The Chebi type identifies small molecules from https://www.ebi.ac.uk/chebi/
+CHEBI_NODE <- MOLECULE_NODE
+// The Uniprot type identifies proteins from https://www.uniprot.org/
+UNIPROT_NODE <- MOLECULE_NODE
+// The Pubchem type identifies small molecules from https://pubchem.ncbi.nlm.nih.gov/
+PUBCHEM_NODE <- MOLECULE_NODE
+// The Drugbank type identifies small molecules from https://www.drugbank.ca/
+DRUGBANK_NODE <- MOLECULE_NODE
+
+
+// The Refseq type represents noncoding RNAs from https://rnacentral.org/
+REFSEQ_NODE <- RNA_NODE
+// The Enst type represents coding RNAs from http://ensembl.org/
+ENST_NODE <- RNA_NODE
+
+// NCBITaxonomy type identifies organisms. source https://www.ncbi.nlm.nih.gov/taxonomy
+SPECIES_NODE <- CONCEPT_NODE
+NCBI_TAXONOMY_NODE <- SPECIES_NODE
+
+// HOMOSAPIENS type identify a Human species
+HOMOSAPIENS_NODE <- SPECIES_NODE
+PATIENT_NODE <- HOMOSAPIENS_NODE
+
+// ENTREZ type identifies gene-specific information from NCBI
+ENTREZ_NODE <- CONCEPT_NODE
+
+//New Quantitative types
+
+QUANTITATIVE_PREDICATE_LINK <- ORDERED_LINK
+SCHEMA_VALUE_RECORD_LINK <- ORDERED_LINK
+SCHEMA_VALUE_LIST_LINK <- LIST_LINK
+LAZY_EXECUTION_OUTPUT_LINK <- ORDERED_LINK
+
+// Cosmetic Chemistry Specializations
+// ===================================
+
+// Ingredient Categories
+// ---------------------
+// The ActiveIngredient type represents active compounds that provide the primary benefits in cosmetic formulations
+ACTIVE_INGREDIENT <- MOLECULE_NODE
+// The Preservative type represents antimicrobial agents that prevent spoilage and contamination
+PRESERVATIVE <- MOLECULE_NODE
+// The Emulsifier type represents compounds that enable mixing of oil and water phases
+EMULSIFIER <- MOLECULE_NODE
+// The Humectant type represents moisture-attracting and retaining compounds
+HUMECTANT <- MOLECULE_NODE
+// The Surfactant type represents surface-active agents for cleansing and foaming
+SURFACTANT <- MOLECULE_NODE
+// The Thickener type represents viscosity-modifying compounds
+THICKENER <- MOLECULE_NODE
+// The Emollient type represents skin-softening and conditioning agents
+EMOLLIENT <- MOLECULE_NODE
+// The Antioxidant type represents compounds that prevent oxidative degradation
+ANTIOXIDANT <- MOLECULE_NODE
+// The UvFilter type represents UV-blocking compounds for sun protection
+UV_FILTER <- MOLECULE_NODE
+// The Fragrance type represents scent-providing compounds
+FRAGRANCE <- MOLECULE_NODE
+// The Colorant type represents pigments and dyes for color effects
+COLORANT <- MOLECULE_NODE
+// The PhAdjuster type represents pH-modifying compounds
+PH_ADJUSTER <- MOLECULE_NODE
+
+// Formulation Types
+// ----------------
+// The SkincareFormulation type represents complete skincare product formulations
+SKINCARE_FORMULATION <- CONCEPT_NODE
+// The HaircareFormulation type represents complete haircare product formulations
+HAIRCARE_FORMULATION <- CONCEPT_NODE
+// The MakeupFormulation type represents complete makeup product formulations
+MAKEUP_FORMULATION <- CONCEPT_NODE
+// The FragranceFormulation type represents complete fragrance product formulations
+FRAGRANCE_FORMULATION <- CONCEPT_NODE
+
+// Property Types
+// -------------
+// The PhProperty type represents pH characteristics of formulations
+PH_PROPERTY <- CONCEPT_NODE
+// The ViscosityProperty type represents flow and texture characteristics
+VISCOSITY_PROPERTY <- CONCEPT_NODE
+// The StabilityProperty type represents formulation stability characteristics
+STABILITY_PROPERTY <- CONCEPT_NODE
+// The TextureProperty type represents sensory and feel characteristics
+TEXTURE_PROPERTY <- CONCEPT_NODE
+// The SpfProperty type represents sun protection factor characteristics
+SPF_PROPERTY <- CONCEPT_NODE
+
+// Interaction Types
+// ----------------
+// The CompatibilityLink type represents positive ingredient interactions
+COMPATIBILITY_LINK <- LINK
+// The IncompatibilityLink type represents negative ingredient interactions
+INCOMPATIBILITY_LINK <- LINK
+// The SynergyLink type represents beneficial ingredient interactions
+SYNERGY_LINK <- LINK
+// The AntagonismLink type represents counteractive ingredient interactions
+ANTAGONISM_LINK <- LINK
+
+// Safety and Regulatory
+// --------------------
+// The SafetyAssessment type represents safety evaluation data
+SAFETY_ASSESSMENT <- CONCEPT_NODE
+// The AllergenClassification type represents allergenicity classifications
+ALLERGEN_CLASSIFICATION <- CONCEPT_NODE
+// The ConcentrationLimit type represents maximum allowed concentrations
+CONCENTRATION_LIMIT <- CONCEPT_NODE

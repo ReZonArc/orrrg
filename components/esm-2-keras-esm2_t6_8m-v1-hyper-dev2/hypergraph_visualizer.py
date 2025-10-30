@@ -275,6 +275,114 @@ class HypergraphVisualizer:
         
         dot.append("}")
         return "\n".join(dot)
+    
+    def generate_mermaid_architecture(self) -> str:
+        """Generate mermaid diagram showing model architecture flow"""
+        mermaid = ["graph TD"]
+        mermaid.append("    A[Input Tokens] --> B[Token Embedding<br/>vocab=33→hidden=320]")
+        mermaid.append("    A --> C[Rotary Positional<br/>Encoding]")
+        mermaid.append("")
+        mermaid.append("    B --> D0[Transformer Layer 0]")
+        mermaid.append("    C --> D0")
+        mermaid.append("")
+        
+        # Add transformer layers
+        for i in range(self.hypergraph.num_layers - 1):
+            mermaid.append(f"    D{i} --> D{i+1}[Transformer Layer {i+1}]")
+        
+        last_layer = self.hypergraph.num_layers - 1
+        mermaid.append("")
+        mermaid.append(f"    D{last_layer} --> E[Final LayerNorm]")
+        mermaid.append("    E --> F[Output Head]")
+        mermaid.append("    F --> G[Output Logits<br/>hidden=320→vocab=33]")
+        mermaid.append("")
+        
+        # Add transformer layer detail
+        mermaid.append("    subgraph \"Each Transformer Layer\"")
+        mermaid.append(f"        H[Multi-Head Attention<br/>{self.hypergraph.num_heads} heads, dim={self.hypergraph.hidden_dim//self.hypergraph.num_heads}] --> I[Residual + LayerNorm]")
+        mermaid.append(f"        I --> J[Feed-Forward Network<br/>{self.hypergraph.hidden_dim}→{self.hypergraph.intermediate_dim}→{self.hypergraph.hidden_dim}]")
+        mermaid.append("        J --> K[Residual + LayerNorm]")
+        mermaid.append("    end")
+        
+        return "\n".join(mermaid)
+    
+    def generate_mermaid_hypergraph_structure(self) -> str:
+        """Generate mermaid diagram showing hypergraph node and edge distribution"""
+        stats = self.hypergraph.get_statistics()
+        
+        mermaid = ["graph LR"]
+        mermaid.append("    subgraph \"Hypergraph Components\"")
+        mermaid.append(f"        subgraph \"Node Types ({stats['total_nodes']} total)\"")
+        
+        for node_type, count in stats['node_types'].items():
+            clean_type = node_type.title()
+            mermaid.append(f"            {node_type.upper()}[{clean_type}: {count}]")
+        
+        mermaid.append("        end")
+        mermaid.append("")
+        mermaid.append(f"        subgraph \"Edge Types ({stats['total_edges']} total)\"")
+        
+        for edge_type, count in stats['edge_types'].items():
+            clean_type = edge_type.replace('_', ' ').title()
+            var_name = edge_type.replace('_', '').upper()
+            mermaid.append(f"            {var_name}[{clean_type}: {count}]")
+        
+        mermaid.append("        end")
+        mermaid.append("    end")
+        
+        return "\n".join(mermaid)
+    
+    def generate_mermaid_query_flow(self) -> str:
+        """Generate mermaid diagram showing query processing flow"""
+        mermaid = ["flowchart LR"]
+        mermaid.append("    A[Query Request] --> B{Query Type}")
+        mermaid.append("")
+        mermaid.append("    B -->|stats| C[Get Statistics<br/>Nodes, Edges, Types]")
+        mermaid.append("    B -->|attention| D[Analyze Attention<br/>Structure & Patterns]")
+        mermaid.append("    B -->|params| E[Parameter Flow<br/>Analysis]")
+        mermaid.append("    B -->|bottlenecks| F[Find Bottlenecks<br/>High Fan-in/out]")
+        mermaid.append("    B -->|path| G[Find Computational<br/>Path A→B]")
+        mermaid.append("    B -->|subgraph| H[Extract Layer<br/>Subgraph]")
+        mermaid.append("")
+        mermaid.append("    C --> I[JSON Output]")
+        mermaid.append("    D --> I")
+        mermaid.append("    E --> I")
+        mermaid.append("    F --> I")
+        mermaid.append("    G --> J[Path Visualization]")
+        mermaid.append("    H --> K[Subgraph Export]")
+        
+        return "\n".join(mermaid)
+    
+    def generate_mermaid_component_architecture(self) -> str:
+        """Generate mermaid class diagram showing component relationships"""
+        mermaid = ["classDiagram"]
+        mermaid.append("    class ESM2Hypergraph {")
+        mermaid.append("        +get_statistics()")
+        mermaid.append("        +to_dict()")
+        mermaid.append("        +save_to_json()")
+        mermaid.append("        +visualize_summary()")
+        mermaid.append("    }")
+        mermaid.append("")
+        mermaid.append("    class HypergraphQueryEngine {")
+        mermaid.append("        +find_nodes_by_type()")
+        mermaid.append("        +find_nodes_by_layer()")
+        mermaid.append("        +get_computational_path()")
+        mermaid.append("        +analyze_parameter_flow()")
+        mermaid.append("        +find_bottlenecks()")
+        mermaid.append("    }")
+        mermaid.append("")
+        mermaid.append("    class HypergraphVisualizer {")
+        mermaid.append("        +create_layer_diagram()")
+        mermaid.append("        +generate_dot_graph()")
+        mermaid.append("        +generate_mermaid_diagrams()")
+        mermaid.append("        +create_connectivity_matrix()")
+        mermaid.append("        +find_critical_paths()")
+        mermaid.append("    }")
+        mermaid.append("")
+        mermaid.append("    HypergraphQueryEngine --> ESM2Hypergraph")
+        mermaid.append("    HypergraphVisualizer --> ESM2Hypergraph")
+        
+        return "\n".join(mermaid)
 
 
 def create_visualization_report(hypergraph: ESM2Hypergraph, output_dir: str = ".") -> str:
@@ -294,6 +402,31 @@ def create_visualization_report(hypergraph: ESM2Hypergraph, output_dir: str = ".
     report.append("## Architecture Overview")
     report.append("```")
     report.append(visualizer.create_layer_diagram())
+    report.append("```")
+    report.append("")
+    
+    # Mermaid diagrams
+    report.append("## Model Architecture Flow")
+    report.append("```mermaid")
+    report.append(visualizer.generate_mermaid_architecture())
+    report.append("```")
+    report.append("")
+    
+    report.append("## Hypergraph Structure")
+    report.append("```mermaid")
+    report.append(visualizer.generate_mermaid_hypergraph_structure())
+    report.append("```")
+    report.append("")
+    
+    report.append("## Component Architecture")
+    report.append("```mermaid")
+    report.append(visualizer.generate_mermaid_component_architecture())
+    report.append("```")
+    report.append("")
+    
+    report.append("## Query Processing Flow")
+    report.append("```mermaid")
+    report.append(visualizer.generate_mermaid_query_flow())
     report.append("```")
     report.append("")
     
