@@ -1,0 +1,30 @@
+---
+title: Component Class Architecture
+---
+
+classDiagram
+    class ESM2Hypergraph {
+        +get_statistics()
+        +to_dict()
+        +save_to_json()
+        +visualize_summary()
+    }
+
+    class HypergraphQueryEngine {
+        +find_nodes_by_type()
+        +find_nodes_by_layer()
+        +get_computational_path()
+        +analyze_parameter_flow()
+        +find_bottlenecks()
+    }
+
+    class HypergraphVisualizer {
+        +create_layer_diagram()
+        +generate_dot_graph()
+        +generate_mermaid_diagrams()
+        +create_connectivity_matrix()
+        +find_critical_paths()
+    }
+
+    HypergraphQueryEngine --> ESM2Hypergraph
+    HypergraphVisualizer --> ESM2Hypergraph

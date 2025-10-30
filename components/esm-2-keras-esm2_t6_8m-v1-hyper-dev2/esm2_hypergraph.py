@@ -5,9 +5,10 @@ A hypergraph represents the model architecture where hyperedges connect multiple
 """
 
 import json
-from typing import Dict, List, Set, Tuple, Any
+from typing import Dict, List, Set, Tuple, Any, Optional
 from dataclasses import dataclass, asdict
 from collections import defaultdict
+from tensor_shape_types import TensorShapeType, TensorShapeTypeRegistry, create_tensor_shape_type
 
 
 @dataclass
@@ -20,6 +21,8 @@ class HyperNode:
     input_shape: Tuple[int, ...]
     output_shape: Tuple[int, ...]
     parameters: Dict[str, Any]
+    input_shape_type: Optional[TensorShapeType] = None
+    output_shape_type: Optional[TensorShapeType] = None
 
 
 @dataclass
@@ -303,7 +306,9 @@ class ESM2Hypergraph:
             layer_idx=layer_idx,
             input_shape=input_shape,
             output_shape=output_shape,
-            parameters=parameters
+            parameters=parameters,
+            input_shape_type=None,  # Will be set by metagraph if used
+            output_shape_type=None  # Will be set by metagraph if used
         )
         self.nodes[node_id] = node
     

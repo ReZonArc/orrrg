@@ -1,0 +1,20 @@
+---
+title: Query Processing Flow
+---
+
+flowchart LR
+    A[Query Request] --> B{Query Type}
+
+    B -->|stats| C[Get Statistics<br/>Nodes, Edges, Types]
+    B -->|attention| D[Analyze Attention<br/>Structure & Patterns]
+    B -->|params| E[Parameter Flow<br/>Analysis]
+    B -->|bottlenecks| F[Find Bottlenecks<br/>High Fan-in/out]
+    B -->|path| G[Find Computational<br/>Path A→B]
+    B -->|subgraph| H[Extract Layer<br/>Subgraph]
+
+    C --> I[JSON Output]
+    D --> I
+    E --> I
+    F --> I
+    G --> J[Path Visualization]
+    H --> K[Subgraph Export]
