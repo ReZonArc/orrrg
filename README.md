@@ -84,10 +84,9 @@ sudo apt-get install git-lfs
 # On macOS:
 brew install git-lfs
 
-# On Windows (via Git for Windows, usually included):
-git lfs install
+# On Windows, Git LFS is usually included with Git for Windows
 
-# Initialize Git LFS (one-time setup):
+# After installation, initialize Git LFS (one-time setup):
 git lfs install
 ```
 
