@@ -76,6 +76,7 @@ ORRRG is an **advanced self-evolving system** that seamlessly integrates and coo
 
 ```bash
 # Clone the repository (components already integrated)
+# Note: This repository uses Git LFS for large binary files
 git clone https://github.com/ReZonArc/orrrg.git
 cd orrrg
 
