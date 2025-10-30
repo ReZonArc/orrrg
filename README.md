@@ -72,11 +72,29 @@ ORRRG is an **advanced self-evolving system** that seamlessly integrates and coo
 
 ## 📦 Installation
 
+### Prerequisites
+
+This repository uses **Git LFS** (Large File Storage) for binary files and large assets. Install Git LFS before cloning:
+
+```bash
+# Install Git LFS (if not already installed)
+# On Ubuntu/Debian:
+sudo apt-get install git-lfs
+
+# On macOS:
+brew install git-lfs
+
+# On Windows (via Git for Windows, usually included):
+git lfs install
+
+# Initialize Git LFS (one-time setup):
+git lfs install
+```
+
 ### Quick Start
 
 ```bash
 # Clone the repository (components already integrated)
-# Note: This repository uses Git LFS for large binary files
 git clone https://github.com/ReZonArc/orrrg.git
 cd orrrg
 
