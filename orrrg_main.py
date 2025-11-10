@@ -117,6 +117,10 @@ async def interactive_mode(soc: SelfOrganizingCore) -> None:
                 await handle_evolution_command(soc, command)
             elif command == 'emergence':
                 await handle_emergence_command(soc)
+            elif command == 'relevance':
+                await handle_relevance_command(soc)
+            elif command.startswith('relevance '):
+                await handle_relevance_command(soc, command)
             else:
                 print(f"Unknown command: {command}. Type 'help' for available commands.")
                 
@@ -140,6 +144,9 @@ Available Commands:
   evolve        - Show evolution engine status
   evolve COMPONENT [OBJECTIVES] - Trigger targeted evolution for component
   emergence     - Show emergent patterns discovered by evolution
+  relevance     - Show relevance realization status (Ennead integration)
+  relevance INSIGHT - Generate relevance realization insight
+  relevance SHIFT A B - Realize perspective shift from component A to B
   help          - Show this help message
   quit          - Exit the system
 """
@@ -479,6 +486,145 @@ async def handle_emergence_command(soc: SelfOrganizingCore) -> None:
         
     except Exception as e:
         print(f"Error analyzing emergence: {e}")
+
+
+async def handle_relevance_command(soc: SelfOrganizingCore, command: str = 'relevance') -> None:
+    """Handle relevance realization commands."""
+    if not hasattr(soc, 'relevance_realization') or not soc.relevance_realization.running:
+        print("Relevance Realization Integrator not initialized")
+        return
+    
+    parts = command.split()
+    
+    if len(parts) == 1:
+        # Show relevance realization status
+        await show_relevance_status(soc)
+    elif len(parts) >= 2:
+        subcommand = parts[1].lower()
+        
+        if subcommand == 'insight':
+            # Generate relevance insight
+            await generate_relevance_insight(soc)
+        elif subcommand == 'shift' and len(parts) >= 4:
+            # Realize perspective shift
+            from_comp = parts[2]
+            to_comp = parts[3]
+            await realize_perspective_shift(soc, from_comp, to_comp)
+        else:
+            print("Usage: relevance [insight | shift FROM_COMPONENT TO_COMPONENT]")
+
+
+async def show_relevance_status(soc: SelfOrganizingCore) -> None:
+    """Show relevance realization Ennead status."""
+    print(f"\n🎯 Relevance Realization Ennead Status")
+    print("=" * 60)
+    
+    try:
+        status = soc.relevance_realization.get_ennead_status()
+        
+        # Overall integration
+        print(f"Ennead Integration Score: {status['ennead_integration_score']:.3f}")
+        print(f"\nTriad Coherence:")
+        for triad_name, coherence in status['triad_coherence'].items():
+            bar = "█" * int(coherence * 20)
+            print(f"  {triad_name.capitalize():15} [{bar:20}] {coherence:.3f}")
+        
+        # Triad I: Ways of Knowing
+        print(f"\n📚 TRIAD I - Ways of Knowing (Epistemological):")
+        print(f"  Propositional Knowledge:   {status['propositional_knowledge_count']} components")
+        print(f"  Procedural Knowledge:      {status['procedural_knowledge_count']} components")
+        print(f"  Perspectival Knowledge:    {status['perspectival_knowledge_count']} components")
+        print(f"  Participatory Knowledge:   {status['participatory_knowledge_count']} components")
+        
+        # Triad II: Orders of Understanding
+        print(f"\n🔬 TRIAD II - Orders of Understanding (Ontological):")
+        print(f"  Nomological Mechanisms:    {status['nomological_mechanisms']}")
+        print(f"  Normative Priorities:      {status['normative_priorities']}")
+        print(f"  Narrative Trajectory:      {status['narrative_trajectory']}")
+        
+        # Triad III: Practices of Wisdom
+        print(f"\n🌟 TRIAD III - Practices of Wisdom (Axiological):")
+        print(f"  Morality (Ethical):        {status['morality_ethical_considerations']} considerations")
+        print(f"  Meaning (Coherence):       {status['meaning_coherence_achievements']} achievements")
+        print(f"  Mastery (Excellence):      {status['mastery_excellence_instances']} instances")
+        
+        # Metrics
+        print(f"\n📊 Relevance Realization Metrics:")
+        print(f"  Total Optimizations:       {status['relevance_optimizations']}")
+        print(f"  Perspective Shifts:        {status['perspective_shifts']}")
+        print(f"  Gnostic Transformations:   {status['gnostic_transformations']}")
+        print(f"  Integration Patterns:      {status['integration_patterns']}")
+        
+        # Frame coherence
+        print(f"\n🔍 Component Relevance Frames:")
+        for comp_name, coherence in status['frame_coherence'].items():
+            rating = "⭐⭐⭐" if coherence > 0.75 else "⭐⭐" if coherence > 0.5 else "⭐"
+            print(f"  {comp_name:30} {coherence:.3f} {rating}")
+        
+        print(f"\n💡 The Ennead framework integrates nine dimensions:")
+        print(f"   • 4 Ways of Knowing (propositional, procedural, perspectival, participatory)")
+        print(f"   • 3 Orders of Understanding (nomological, normative, narrative)")
+        print(f"   • 3 Practices of Wisdom (morality, meaning, mastery)")
+        
+    except Exception as e:
+        print(f"Error showing relevance status: {e}")
+
+
+async def generate_relevance_insight(soc: SelfOrganizingCore) -> None:
+    """Generate and show relevance realization insight."""
+    print(f"\n💡 Generating Relevance Realization Insight...")
+    print("=" * 60)
+    
+    try:
+        insight = await soc.relevance_realization.generate_ennead_insight()
+        
+        if insight:
+            print(f"\n{insight}\n")
+            print(f"This insight reflects the current state of integration across")
+            print(f"the nine dimensions of the Relevance Realization Ennead.")
+        else:
+            print("No specific insights available yet. System is still learning.")
+        
+    except Exception as e:
+        print(f"Error generating insight: {e}")
+
+
+async def realize_perspective_shift(soc: SelfOrganizingCore, from_component: str, to_component: str) -> None:
+    """Realize a perspective shift between components."""
+    print(f"\n🔄 Perspective Shift: {from_component} → {to_component}")
+    print("=" * 60)
+    
+    try:
+        result = await soc.relevance_realization.realize_perspective_shift(from_component, to_component)
+        
+        if not result['success']:
+            print(f"❌ Shift failed: {result['reason']}")
+            return
+        
+        print(f"✅ Perspective shift realized successfully!")
+        print(f"\nFrom: {result['from_component']}")
+        print(f"To:   {result['to_component']}")
+        
+        if result['salience_shift']:
+            print(f"\n🎯 Salience Changes:")
+            for capability, salience in result['salience_shift'].items():
+                print(f"  • {capability}: {salience:.3f}")
+        
+        if result['mode_shifts']:
+            print(f"\n📚 Knowing Mode Shifts:")
+            for mode, shift in result['mode_shifts'].items():
+                direction = "↑" if shift > 0 else "↓"
+                print(f"  • {mode}: {direction} {abs(shift):.3f}")
+        
+        if result['is_gnostic_transformation']:
+            print(f"\n🌟 GNOSTIC TRANSFORMATION ACHIEVED!")
+            print(f"This shift significantly increases participatory knowing,")
+            print(f"enabling transformative change in system identity and capabilities.")
+        
+        print(f"\nTotal perspective shifts: {result['perspective_shift_count']}")
+        
+    except Exception as e:
+        print(f"Error realizing perspective shift: {e}")
 
 
 async def daemon_mode(soc: SelfOrganizingCore) -> None:

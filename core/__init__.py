@@ -16,8 +16,12 @@ from .holistic_metamodel import (
     TriadProductionProcess, TriadProductionStep, EnneadMetaSystem, EnneadAspect,
     EvolutionaryHelix, EvolutionaryHelixStage
 )
+from .relevance_realization_integrator import (
+    RelevanceRealizationIntegrator, RelevanceFrame, EnneadState,
+    KnowingMode, UnderstandingOrder, WisdomPractice
+)
 
-__version__ = "1.1.0"  # Updated version for evolution capabilities
+__version__ = "1.2.0"  # Updated version for relevance realization integration
 __author__ = "ReZonArc"
 
 __all__ = [
@@ -47,5 +51,11 @@ __all__ = [
     "EnneadMetaSystem",
     "EnneadAspect",
     "EvolutionaryHelix",
-    "EvolutionaryHelixStage"
+    "EvolutionaryHelixStage",
+    "RelevanceRealizationIntegrator",
+    "RelevanceFrame",
+    "EnneadState",
+    "KnowingMode",
+    "UnderstandingOrder",
+    "WisdomPractice"
 ]
