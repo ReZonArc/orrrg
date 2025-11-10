@@ -41,6 +41,7 @@ from datetime import datetime
 
 from .autognosis import AutognosisOrchestrator
 from .evolution_engine import EvolutionEngine, EvolutionaryGenome, EmergentPattern
+from .relevance_realization_integrator import RelevanceRealizationIntegrator
 
 
 # Configure logging
@@ -112,6 +113,9 @@ class SelfOrganizingCore:
         # Initialize evolution engine
         self.evolution_engine = EvolutionEngine()
         
+        # Initialize relevance realization integrator
+        self.relevance_realization = RelevanceRealizationIntegrator()
+        
         # Initialize component definitions
         self.component_definitions = {
             "oj7s3": {
@@ -180,6 +184,9 @@ class SelfOrganizingCore:
         # Initialize evolution engine
         await self.evolution_engine.initialize(self._evaluate_component_fitness)
         
+        # Initialize relevance realization integrator
+        await self.relevance_realization.initialize(self)
+        
         # Start event processing
         asyncio.create_task(self.process_events())
         
@@ -188,6 +195,9 @@ class SelfOrganizingCore:
         
         # Start evolutionary processes
         asyncio.create_task(self._run_evolution_cycles())
+        
+        # Start relevance realization optimization
+        asyncio.create_task(self._run_relevance_optimization_cycles())
         
         self.running = True
         logger.info("Self-Organizing Core initialized successfully")
@@ -467,7 +477,61 @@ class SelfOrganizingCore:
         if hasattr(self, 'autognosis') and self.autognosis:
             status["autognosis"] = self.get_autognosis_status()
         
+        # Add evolution engine status if available
+        if hasattr(self, 'evolution_engine') and self.evolution_engine:
+            status["evolution"] = self.evolution_engine.get_evolution_status()
+        
+        # Add relevance realization status if available
+        if hasattr(self, 'relevance_realization') and self.relevance_realization.running:
+            status["relevance_realization"] = self.relevance_realization.get_ennead_status()
+        
         return status
+    
+    async def _run_relevance_optimization_cycles(self) -> None:
+        """Run continuous relevance realization optimization cycles."""
+        logger.info("Starting relevance realization optimization cycles...")
+        
+        while self.running:
+            try:
+                await asyncio.sleep(45)  # Run every 45 seconds
+                
+                if not hasattr(self, 'relevance_realization') or not self.relevance_realization.running:
+                    continue
+                
+                # Create optimization context from current system state
+                context = {
+                    'task_type': 'system_optimization',
+                    'domain': 'multi_domain_integration',
+                    'requirements': list(set(
+                        cap for comp in self.components.values()
+                        for cap in comp.capabilities
+                    ))
+                }
+                
+                # Optimize relevance realization
+                result = await self.relevance_realization.optimize_relevance_realization(context)
+                
+                # Log optimization results
+                logger.info(f"Relevance optimization completed: "
+                           f"Score={result['relevance_score']:.3f}, "
+                           f"Integration={result['ennead_integration']:.3f}")
+                
+                # Generate and log insight
+                insight = await self.relevance_realization.generate_ennead_insight()
+                if insight:
+                    logger.info(f"Relevance Insight: {insight}")
+                
+                # Publish optimization event
+                await self.event_bus.put({
+                    "type": "relevance_optimization",
+                    "result": result,
+                    "insight": insight,
+                    "timestamp": datetime.now().isoformat()
+                })
+                
+            except Exception as e:
+                logger.error(f"Error in relevance optimization cycle: {e}")
+                await asyncio.sleep(60)
     
     async def _run_evolution_cycles(self) -> None:
         """Run evolutionary cycles for system evolution."""
