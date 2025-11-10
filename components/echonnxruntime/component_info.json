@@ -1,18 +1,3 @@
-{
-  "name": "echonnxruntime",
-  "description": "ONNX Runtime for optimized machine learning model inference",
-  "version": "0.1.0",
-  "upstream_url": "https://github.com/microsoft/onnxruntime",
-  "upstream_project": "ONNX Runtime",
-  "integration_type": "ML inference wrapper",
-  "dependencies": [
-    "onnxruntime",
-    "numpy"
-  ],
-  "files": [
-    "inference.py",
-    "optimization.py",
-    "session.py"
-  ],
-  "status": "active"
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:a202b7ee28545cba81d5abdbdec75ce430cf5e9432880a8caf998c1da7d5f7e1
+size 437
