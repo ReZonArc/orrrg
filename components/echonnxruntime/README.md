@@ -1,76 +1,49 @@
-# echonnxruntime
+<p align="center"><img width="50%" src="docs/images/ONNX_Runtime_logo_dark.png" /></p>
 
-ONNX Runtime for optimized machine learning model inference
+**ONNX Runtime is a cross-platform inference and training machine-learning accelerator**.
 
-## Status
+**ONNX Runtime inference** can enable faster customer experiences and lower costs, supporting models from deep learning frameworks such as PyTorch and TensorFlow/Keras as well as classical machine learning libraries such as scikit-learn, LightGBM, XGBoost, etc. ONNX Runtime is compatible with different hardware, drivers, and operating systems, and provides optimal performance by leveraging hardware accelerators where applicable alongside graph optimizations and transforms. [Learn more &rarr;](https://www.onnxruntime.ai/docs/#onnx-runtime-for-inferencing)
 
-**Active Implementation** - Integration wrapper for [ONNX Runtime](https://github.com/microsoft/onnxruntime)
+**ONNX Runtime training** can accelerate the model training time on multi-node NVIDIA GPUs for transformer models with a one-line addition for existing PyTorch training scripts. [Learn more &rarr;](https://www.onnxruntime.ai/docs/#onnx-runtime-for-training)
 
-## Overview
+## Get Started & Resources
 
-This component provides a lightweight ML inference wrapper that integrates ONNX Runtime 
-into the ORRRG self-organizing core framework.
+* **General Information**: [onnxruntime.ai](https://onnxruntime.ai)
 
-## Integration Type
+* **Usage documentation and tutorials**: [onnxruntime.ai/docs](https://onnxruntime.ai/docs)
 
-**ML inference wrapper** - This is not a full clone of the upstream repository. Instead, it provides:
-- Clean Python API for ORRRG integration
-- Adapter pattern for the Self-Organizing Core
-- Standard ComponentInterface implementation
-- Efficient resource management
+* **YouTube video tutorials**: [youtube.com/@ONNXRuntime](https://www.youtube.com/@ONNXRuntime)
 
-## Dependencies
+* [**Upcoming Release Roadmap**](https://onnxruntime.ai/roadmap)
 
-This component requires:
-- onnxruntime
-- numpy
+* **Companion sample repositories**:
+  - ONNX Runtime Inferencing: [microsoft/onnxruntime-inference-examples](https://github.com/microsoft/onnxruntime-inference-examples)
+  - ONNX Runtime Training: [microsoft/onnxruntime-training-examples](https://github.com/microsoft/onnxruntime-training-examples)
 
-To install dependencies:
-```bash
-pip install onnxruntime numpy
-```
+## Releases
 
-## Usage
+The current release and past releases can be found here: https://github.com/microsoft/onnxruntime/releases.
 
-```python
-from components.echonnxruntime import EchonnxruntimeComponent
+For details on the upcoming release, including release dates, announcements, features, and guidance on submitting feature requests, please visit the release roadmap: https://onnxruntime.ai/roadmap.
 
-# Initialize component
-component = EchonnxruntimeComponent()
-await component.initialize({})
+## Data/Telemetry
 
-# Use component functionality
-result = await component.process({
-    "type": "analysis",
-    "data": {...}
-})
-```
+Windows distributions of this project may collect usage data and send it to Microsoft to help improve our products and services. See the [privacy statement](docs/Privacy.md) for more details.
 
-## Integration with ORRRG
+## Contributions and Feedback
 
-This component integrates with the ORRRG Self-Organizing Core through the standard ComponentInterface:
+We welcome contributions! Please see the [contribution guidelines](CONTRIBUTING.md).
 
-```python
-class ComponentInterface(ABC):
-    async def initialize(self, config: Dict[str, Any]) -> bool
-    async def process(self, data: Dict[str, Any]) -> Dict[str, Any]
-    async def cleanup(self) -> None
-    def get_capabilities(self) -> List[str]
-```
+For feature requests or bug reports, please file a [GitHub Issue](https://github.com/Microsoft/onnxruntime/issues).
 
-## Files
+For general discussion or questions, please use [GitHub Discussions](https://github.com/microsoft/onnxruntime/discussions).
 
-- `inference.py` - Implementation module
-- `optimization.py` - Implementation module
-- `session.py` - Implementation module
+## Code of Conduct
 
-## Upstream Project
-
-This component is based on [ONNX Runtime](https://github.com/microsoft/onnxruntime).
-
-For full documentation of the upstream project, see the [upstream repository](https://github.com/microsoft/onnxruntime).
+This project has adopted the [Microsoft Open Source Code of Conduct](https://opensource.microsoft.com/codeofconduct/).
+For more information see the [Code of Conduct FAQ](https://opensource.microsoft.com/codeofconduct/faq/)
+or contact [opencode@microsoft.com](mailto:opencode@microsoft.com) with any additional questions or comments.
 
 ## License
 
-This integration wrapper is part of ORRRG and licensed under AGPL v3.0.
-The upstream project may have its own license - please refer to the upstream repository.
+This project is licensed under the [MIT License](LICENSE).

@@ -15,7 +15,7 @@ logger = logging.getLogger(__name__)
 
 class EchonnxruntimeComponent:
     """
-    ORRRG component for onnx runtime for optimized machine learning model inference.
+    ORRRG component for ONNX Runtime ML inference.
     
     This is a lightweight ML inference wrapper that integrates
     ONNX Runtime into the ORRRG framework.
@@ -68,7 +68,7 @@ class EchonnxruntimeComponent:
             "name": "echonnxruntime",
             "description": "ONNX Runtime for optimized machine learning model inference",
             "version": __version__,
-            "upstream": "https://github.com/microsoft/onnxruntime",
+            "upstream": "https://github.com/ReZonArc/echonnxruntime",
             "upstream_project": "ONNX Runtime",
             "integration_type": "ML inference wrapper",
             "dependencies": ['onnxruntime', 'numpy'],
