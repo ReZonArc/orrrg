@@ -7,6 +7,7 @@ import asyncio
 import sys
 import logging
 from pathlib import Path
+import pytest
 
 # Add the current directory to sys.path to import core modules
 sys.path.append(str(Path(__file__).parent))
@@ -24,6 +25,7 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 
+@pytest.mark.asyncio
 async def test_relevance_realization_integration():
     """Test the full relevance realization integration with SOC."""
     print("=" * 70)
@@ -183,6 +185,7 @@ async def test_relevance_realization_integration():
     print("\n   This enables optimal relevance realization across all ORRRG components!")
 
 
+@pytest.mark.asyncio
 async def test_standalone_relevance_integrator():
     """Test standalone relevance integrator functionality."""
     print("\n" + "=" * 70)

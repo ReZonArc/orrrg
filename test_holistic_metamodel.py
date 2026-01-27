@@ -4,6 +4,7 @@ Test script for Eric Schwarz's Holistic Metamodel implementation
 """
 
 import asyncio
+import pytest
 import sys
 import logging
 from pathlib import Path
@@ -22,6 +23,7 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 
+@pytest.mark.asyncio
 async def test_hieroglyphic_monad():
     """Test the hieroglyphic monad implementation."""
     print("=" * 60)
@@ -42,6 +44,7 @@ async def test_hieroglyphic_monad():
         print()
 
 
+@pytest.mark.asyncio
 async def test_dual_complementarity():
     """Test the dual complementarity implementation."""
     print("=" * 60)
@@ -81,6 +84,7 @@ async def test_dual_complementarity():
     print()
 
 
+@pytest.mark.asyncio
 async def test_triadic_system():
     """Test the triadic system implementation."""
     print("=" * 60)
@@ -123,6 +127,7 @@ async def test_triadic_system():
     print()
 
 
+@pytest.mark.asyncio
 async def test_self_stabilizing_cycle():
     """Test the self-stabilizing cycle implementation."""
     print("=" * 60)
@@ -165,6 +170,7 @@ async def test_self_stabilizing_cycle():
     print()
 
 
+@pytest.mark.asyncio
 async def test_organizational_dynamics():
     """Test the organizational dynamics processor."""
     print("=" * 60)
@@ -223,6 +229,7 @@ async def test_organizational_dynamics():
     print()
 
 
+@pytest.mark.asyncio
 async def test_full_metamodel_orchestrator():
     """Test the complete holistic metamodel orchestrator."""
     print("=" * 60)
