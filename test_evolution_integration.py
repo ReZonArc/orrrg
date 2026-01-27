@@ -16,6 +16,7 @@ import asyncio
 import sys
 import logging
 from pathlib import Path
+import pytest
 
 # Add the current directory to sys.path to import core modules
 sys.path.append(str(Path(__file__).parent))
@@ -30,6 +31,7 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 
+@pytest.mark.asyncio
 async def test_evolution_engine_initialization():
     """Test evolution engine initialization."""
     print("=" * 70)
@@ -45,6 +47,7 @@ async def test_evolution_engine_initialization():
     print(f"  • Emergent Synthesizer: {'Active' if evolution_engine.emergent_synthesizer else 'Inactive'}")
 
 
+@pytest.mark.asyncio
 async def test_genetic_operations():
     """Test genetic programming operations."""
     print("\n" + "=" * 70)
@@ -113,6 +116,7 @@ async def test_genetic_operations():
         print(f"              Parents: {child.parent_genomes}")
 
 
+@pytest.mark.asyncio
 async def test_quantum_inspired_evolution():
     """Test quantum-inspired evolutionary algorithms."""
     print("\n" + "=" * 70)
@@ -163,6 +167,7 @@ async def test_quantum_inspired_evolution():
     print(f"  Entangled components for correlated evolution")
 
 
+@pytest.mark.asyncio
 async def test_emergent_behavior_synthesis():
     """Test emergent behavior synthesis."""
     print("\n" + "=" * 70)
@@ -242,6 +247,7 @@ async def test_emergent_behavior_synthesis():
                 print(f"      ... ({len(code_lines) - 5} more lines)")
 
 
+@pytest.mark.asyncio
 async def test_self_organizing_core_integration():
     """Test integration with self-organizing core."""
     print("\n" + "=" * 70)
@@ -282,6 +288,7 @@ async def test_self_organizing_core_integration():
     await soc.shutdown()
 
 
+@pytest.mark.asyncio
 async def test_autognosis_evolution_synergy():
     """Test synergy between autognosis and evolution systems."""
     print("\n" + "=" * 70)
@@ -322,6 +329,7 @@ async def test_autognosis_evolution_synergy():
     await soc.shutdown()
 
 
+@pytest.mark.asyncio
 async def test_complete_evolution_cycle():
     """Test a complete evolution cycle."""
     print("\n" + "=" * 70)
