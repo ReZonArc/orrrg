@@ -153,6 +153,304 @@ class SimpleAtomSpace:
             }
         }
 
+    # --- Persistence ---
+
+    def save_to_dict(self) -> Dict[str, Any]:
+        """Serialize the entire AtomSpace to a dictionary."""
+        atoms_data = {}
+        for atom_id, atom in self.atoms.items():
+            atoms_data[atom_id] = {
+                'type': atom.atom_type.value,
+                'name': atom.name,
+                'truth_value': list(atom.truth_value),
+                'attention_value': atom.attention_value,
+                'incoming': list(atom.incoming),
+                'outgoing': list(atom.outgoing),
+            }
+        return {'version': 1, 'atoms': atoms_data}
+
+    def load_from_dict(self, data: Dict[str, Any]) -> int:
+        """
+        Load AtomSpace state from a dictionary.
+        
+        Returns number of atoms loaded.
+        """
+        self.atoms.clear()
+        self.type_index.clear()
+        self.name_index.clear()
+
+        atoms_data = data.get('atoms', {})
+        for atom_id, atom_data in atoms_data.items():
+            atom_type = AtomType(atom_data['type'])
+            atom = Atom(
+                atom_type=atom_type,
+                name=atom_data['name'],
+                truth_value=tuple(atom_data['truth_value']),
+                attention_value=atom_data.get('attention_value', 0.0),
+                incoming=set(atom_data.get('incoming', [])),
+                outgoing=set(atom_data.get('outgoing', [])),
+            )
+            self.atoms[atom_id] = atom
+
+            if atom_type not in self.type_index:
+                self.type_index[atom_type] = set()
+            self.type_index[atom_type].add(atom_id)
+
+            if atom.name not in self.name_index:
+                self.name_index[atom.name] = set()
+            self.name_index[atom.name].add(atom_id)
+
+        return len(self.atoms)
+
+    def save_to_json(self, path: str) -> None:
+        """Save AtomSpace to a JSON file."""
+        import json as _json
+        data = self.save_to_dict()
+        with open(path, 'w') as f:
+            _json.dump(data, f, indent=2)
+        logger.info(f"AtomSpace saved to {path} ({len(self.atoms)} atoms)")
+
+    def load_from_json(self, path: str) -> int:
+        """Load AtomSpace from a JSON file. Returns atom count."""
+        import json as _json
+        with open(path, 'r') as f:
+            data = _json.load(f)
+        count = self.load_from_dict(data)
+        logger.info(f"AtomSpace loaded from {path} ({count} atoms)")
+        return count
+
+
+class PLNInferenceEngine:
+    """
+    Probabilistic Logic Networks (PLN) inference engine.
+    
+    Implements core PLN rules:
+    - Deduction: If A→B and B→C then A→C
+    - Induction: If A→B and A→C then B→C (weaker)
+    - Abduction: If A→B and C→B then A→C (weaker)
+    - Modus Ponens: If A and A→B then B
+    """
+
+    @staticmethod
+    def deduction_strength(sAB: float, sBC: float, sB: float, sC: float) -> float:
+        """
+        PLN deduction truth value formula.
+        
+        Given: P(B|A)=sAB, P(C|B)=sBC, P(B)=sB, P(C)=sC
+        Returns: P(C|A)
+        """
+        if sB == 0:
+            return sC
+        return sAB * sBC + (1 - sAB) * (sC - sB * sBC) / max(1 - sB, 0.0001)
+
+    @staticmethod
+    def deduction_confidence(cAB: float, cBC: float, count_B: int = 10) -> float:
+        """Confidence of deduction result."""
+        return cAB * cBC * min(count_B / 10.0, 1.0)
+
+    @staticmethod
+    def induction_strength(sAB: float, sAC: float, sA: float) -> float:
+        """
+        PLN induction: If A→B and A→C, infer B→C.
+        Weaker than deduction.
+        """
+        if sA == 0:
+            return 0.0
+        return sAB * sAC / max(sA, 0.0001)
+
+    @staticmethod
+    def induction_confidence(cAB: float, cAC: float, count_A: int = 10) -> float:
+        """Confidence of induction result (weaker than deduction)."""
+        return cAB * cAC * min(count_A / 20.0, 0.5)
+
+    @staticmethod
+    def abduction_strength(sAB: float, sCB: float, sB: float) -> float:
+        """
+        PLN abduction: If A→B and C→B, infer A→C.
+        Weakest of the three.
+        """
+        if sB == 0:
+            return 0.0
+        return sAB * sCB / max(sB, 0.0001)
+
+    @staticmethod
+    def abduction_confidence(cAB: float, cCB: float, count_B: int = 10) -> float:
+        """Confidence of abduction result (weakest)."""
+        return cAB * cCB * min(count_B / 30.0, 0.3)
+
+    @staticmethod
+    def modus_ponens_strength(sA: float, sAB: float) -> float:
+        """Modus ponens: Given A and A→B, infer B."""
+        return sA * sAB
+
+    @staticmethod
+    def modus_ponens_confidence(cA: float, cAB: float) -> float:
+        """Confidence of modus ponens."""
+        return cA * cAB
+
+    def apply_deduction(
+        self, atomspace: 'SimpleAtomSpace',
+        source_id: str, middle_id: str, target_id: str
+    ) -> Optional[Tuple[float, float]]:
+        """
+        Apply deduction rule to derive source→target from source→middle and middle→target.
+        Returns (strength, confidence) or None if atoms not found.
+        """
+        source = atomspace.get_atom(source_id)
+        middle = atomspace.get_atom(middle_id)
+        target = atomspace.get_atom(target_id)
+        if not all([source, middle, target]):
+            return None
+
+        sAB = source.truth_value[0]
+        sBC = middle.truth_value[0]
+        sB = middle.truth_value[0]
+        sC = target.truth_value[0]
+        cAB = source.truth_value[1]
+        cBC = middle.truth_value[1]
+
+        strength = self.deduction_strength(sAB, sBC, sB, sC)
+        confidence = self.deduction_confidence(cAB, cBC)
+        return (min(max(strength, 0.0), 1.0), min(max(confidence, 0.0), 1.0))
+
+
+class ECANAttentionBank:
+    """
+    Economic Attention Network (ECAN) for managing attention allocation.
+    
+    Implements:
+    - Short-Term Importance (STI) spreading
+    - Long-Term Importance (LTI) tracking
+    - Hebbian link strengthening
+    - Importance decay
+    - Focus set management (attentional focus)
+    """
+
+    def __init__(self, focus_boundary: float = 0.5, decay_rate: float = 0.05):
+        self.focus_boundary = focus_boundary
+        self.decay_rate = decay_rate
+        self._sti: Dict[str, float] = {}  # atom_id -> STI value
+        self._lti: Dict[str, float] = {}  # atom_id -> LTI value
+        self._hebbian_links: Dict[Tuple[str, str], float] = {}  # (src, tgt) -> weight
+        self._total_stimulus: float = 0.0
+        self._cycles: int = 0
+
+    def set_sti(self, atom_id: str, value: float) -> None:
+        """Set short-term importance for an atom."""
+        self._sti[atom_id] = value
+
+    def get_sti(self, atom_id: str) -> float:
+        """Get short-term importance for an atom."""
+        return self._sti.get(atom_id, 0.0)
+
+    def set_lti(self, atom_id: str, value: float) -> None:
+        """Set long-term importance for an atom."""
+        self._lti[atom_id] = value
+
+    def get_lti(self, atom_id: str) -> float:
+        """Get long-term importance for an atom."""
+        return self._lti.get(atom_id, 0.0)
+
+    def stimulate(self, atom_id: str, amount: float) -> float:
+        """Stimulate an atom, increasing its STI."""
+        current = self._sti.get(atom_id, 0.0)
+        new_sti = min(current + amount, 1.0)
+        self._sti[atom_id] = new_sti
+        self._total_stimulus += amount
+        return new_sti
+
+    def get_focus_set(self) -> List[str]:
+        """Get atoms currently in the attentional focus (STI above boundary)."""
+        return [aid for aid, sti in self._sti.items() if sti >= self.focus_boundary]
+
+    def spread_importance(self, atomspace: 'SimpleAtomSpace') -> int:
+        """
+        Spread STI from high-attention atoms to their neighbors.
+        Returns number of atoms affected.
+        """
+        affected = 0
+        spread_fraction = 0.3  # Fraction of STI to spread
+
+        updates: Dict[str, float] = {}
+        for atom_id, sti in self._sti.items():
+            if sti < self.focus_boundary:
+                continue
+            atom = atomspace.get_atom(atom_id)
+            if not atom:
+                continue
+
+            neighbors = atom.outgoing | atom.incoming
+            if not neighbors:
+                continue
+
+            spread_amount = sti * spread_fraction / len(neighbors)
+            for neighbor_id in neighbors:
+                current = updates.get(neighbor_id, self._sti.get(neighbor_id, 0.0))
+                updates[neighbor_id] = min(current + spread_amount, 1.0)
+                affected += 1
+
+        for aid, new_sti in updates.items():
+            self._sti[aid] = new_sti
+
+        return affected
+
+    def decay_importance(self) -> int:
+        """Apply decay to all STI values. Returns number of atoms decayed."""
+        decayed = 0
+        to_remove = []
+        for atom_id in list(self._sti.keys()):
+            self._sti[atom_id] *= (1.0 - self.decay_rate)
+            if self._sti[atom_id] < 0.01:
+                to_remove.append(atom_id)
+            decayed += 1
+
+        for aid in to_remove:
+            del self._sti[aid]
+
+        return decayed
+
+    def strengthen_hebbian(self, source_id: str, target_id: str, amount: float = 0.1) -> float:
+        """Strengthen the hebbian link between two co-activated atoms."""
+        key = (source_id, target_id)
+        current = self._hebbian_links.get(key, 0.0)
+        new_weight = min(current + amount, 1.0)
+        self._hebbian_links[key] = new_weight
+        return new_weight
+
+    def run_cycle(self, atomspace: 'SimpleAtomSpace') -> Dict[str, Any]:
+        """Run one ECAN cycle: spread, decay, update focus set."""
+        self._cycles += 1
+        spread_count = self.spread_importance(atomspace)
+        decay_count = self.decay_importance()
+        focus_set = self.get_focus_set()
+
+        # Strengthen hebbian links between co-focused atoms
+        for i, a in enumerate(focus_set):
+            for b in focus_set[i+1:]:
+                self.strengthen_hebbian(a, b)
+
+        return {
+            'cycle': self._cycles,
+            'spread_affected': spread_count,
+            'decayed': decay_count,
+            'focus_set_size': len(focus_set),
+            'focus_set': focus_set[:10],
+            'total_tracked': len(self._sti),
+        }
+
+    def get_statistics(self) -> Dict[str, Any]:
+        """Get ECAN statistics."""
+        focus = self.get_focus_set()
+        return {
+            'cycles': self._cycles,
+            'tracked_atoms': len(self._sti),
+            'focus_set_size': len(focus),
+            'focus_boundary': self.focus_boundary,
+            'decay_rate': self.decay_rate,
+            'hebbian_links': len(self._hebbian_links),
+            'total_stimulus': round(self._total_stimulus, 3),
+        }
+
 
 class OpenCogAdapter:
     """
@@ -167,6 +465,8 @@ class OpenCogAdapter:
     
     def __init__(self):
         self.atomspace = SimpleAtomSpace()
+        self.pln = PLNInferenceEngine()
+        self.ecan = ECANAttentionBank()
         self.initialized = False
         self.reasoning_cycles = 0
         self.learned_patterns: List[Dict[str, Any]] = []
@@ -227,6 +527,14 @@ class OpenCogAdapter:
             return await self._query_knowledge(data)
         elif operation == 'infer':
             return await self._inference(data)
+        elif operation == 'pln_deduce':
+            return await self._pln_deduce(data)
+        elif operation == 'ecan_cycle':
+            return self._ecan_cycle(data)
+        elif operation == 'save':
+            return self._save_state(data)
+        elif operation == 'load':
+            return self._load_state(data)
         else:
             logger.warning(f"Unknown operation: {operation}")
             return {'status': 'error', 'message': f'Unknown operation: {operation}'}
@@ -480,7 +788,6 @@ class OpenCogAdapter:
     
     async def _discover_novel_patterns(self) -> List[Dict[str, Any]]:
         """Discover novel reasoning patterns."""
-        # Simple pattern discovery: find highly connected subgraphs
         patterns = []
         
         concepts = self.atomspace.get_atoms_by_type(AtomType.CONCEPT)
@@ -495,6 +802,64 @@ class OpenCogAdapter:
                 patterns.append(pattern)
         
         return patterns[:5]  # Return top 5
+
+    async def _pln_deduce(self, data: Dict[str, Any]) -> Dict[str, Any]:
+        """Apply PLN deduction rule."""
+        source_id = data.get('source_id', '')
+        middle_id = data.get('middle_id', '')
+        target_id = data.get('target_id', '')
+
+        result = self.pln.apply_deduction(self.atomspace, source_id, middle_id, target_id)
+        if result is None:
+            return {'status': 'error', 'message': 'One or more atoms not found'}
+
+        strength, confidence = result
+        # Create inferred link in AtomSpace
+        link_name = f"deduced:{source_id}->{target_id}"
+        inferred = Atom(AtomType.IMPLICATION, link_name, truth_value=(strength, confidence))
+        atom_id = self.atomspace.add_atom(inferred)
+
+        return {
+            'status': 'success',
+            'rule': 'deduction',
+            'inferred_id': atom_id,
+            'truth_value': {'strength': round(strength, 4), 'confidence': round(confidence, 4)},
+        }
+
+    def _ecan_cycle(self, data: Dict[str, Any]) -> Dict[str, Any]:
+        """Run an ECAN attention cycle."""
+        # Optionally stimulate specific atoms first
+        stimulate = data.get('stimulate', {})
+        for atom_id, amount in stimulate.items():
+            self.ecan.stimulate(atom_id, amount)
+
+        cycle_result = self.ecan.run_cycle(self.atomspace)
+
+        # Sync ECAN STI back to atom attention_values
+        for atom_id in self.ecan._sti:
+            atom = self.atomspace.get_atom(atom_id)
+            if atom:
+                atom.attention_value = self.ecan.get_sti(atom_id)
+
+        return {'status': 'success', 'ecan': cycle_result}
+
+    def _save_state(self, data: Dict[str, Any]) -> Dict[str, Any]:
+        """Save AtomSpace state to file."""
+        path = data.get('path', 'atomspace_state.json')
+        try:
+            self.atomspace.save_to_json(path)
+            return {'status': 'success', 'path': path, 'atoms_saved': len(self.atomspace.atoms)}
+        except Exception as e:
+            return {'status': 'error', 'message': str(e)}
+
+    def _load_state(self, data: Dict[str, Any]) -> Dict[str, Any]:
+        """Load AtomSpace state from file."""
+        path = data.get('path', 'atomspace_state.json')
+        try:
+            count = self.atomspace.load_from_json(path)
+            return {'status': 'success', 'path': path, 'atoms_loaded': count}
+        except Exception as e:
+            return {'status': 'error', 'message': str(e)}
     
     async def cleanup(self) -> None:
         """Cleanup adapter resources."""
@@ -520,9 +885,13 @@ class OpenCogAdapter:
             'initialized': self.initialized,
             'reasoning_cycles': self.reasoning_cycles,
             'learned_patterns': len(self.learned_patterns),
-            'atomspace': self.atomspace.get_statistics()
+            'atomspace': self.atomspace.get_statistics(),
+            'ecan': self.ecan.get_statistics(),
         }
 
 
 # Export main adapter class
-__all__ = ['OpenCogAdapter', 'AtomType', 'Atom', 'SimpleAtomSpace']
+__all__ = [
+    'OpenCogAdapter', 'AtomType', 'Atom', 'SimpleAtomSpace',
+    'PLNInferenceEngine', 'ECANAttentionBank',
+]
