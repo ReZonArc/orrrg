@@ -20,8 +20,11 @@ from .relevance_realization_integrator import (
     RelevanceRealizationIntegrator, RelevanceFrame, EnneadState,
     KnowingMode, UnderstandingOrder, WisdomPractice
 )
+from .persistence import PersistenceManager, PersistenceSnapshot
+from .plugin_loader import PluginLoader, PluginInfo
+from .inference_pipeline import UnifiedInferencePipeline, InferencePipelineResult
 
-__version__ = "1.2.0"  # Updated version for relevance realization integration
+__version__ = "2.0.0"
 __author__ = "ReZonArc"
 
 __all__ = [
@@ -57,5 +60,11 @@ __all__ = [
     "EnneadState",
     "KnowingMode",
     "UnderstandingOrder",
-    "WisdomPractice"
+    "WisdomPractice",
+    "PersistenceManager",
+    "PersistenceSnapshot",
+    "PluginLoader",
+    "PluginInfo",
+    "UnifiedInferencePipeline",
+    "InferencePipelineResult",
 ]

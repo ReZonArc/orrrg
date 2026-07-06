@@ -8,7 +8,7 @@ Full integration with ORRRG's Relevance Realization Ennead and Evolution Engine.
 
 from typing import Dict, List, Any, Optional
 import logging
-from .opencog_adapter import OpenCogAdapter, AtomType, Atom, SimpleAtomSpace
+from .opencog_adapter import OpenCogAdapter, AtomType, Atom, SimpleAtomSpace, PLNInferenceEngine, ECANAttentionBank
 
 __version__ = "1.0.0"
 
